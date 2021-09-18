@@ -1,13 +1,13 @@
 CXX = g++
-CFLAGS = -pedantic -Wall -Wextra -O2 -I
+CFLAGS = -stc=c++17 -I.
 
 all: main
 
-build: main.cpp automaton.cpp util.cpp util.h automaton.h
-	$(GXX) main.cpp -o main
+build: main.cpp automaton.cpp automaton.h simulations.cpp simulations.h util.cpp util.h
+	$(GXX) main.cpp $(CFLAGS) -o main automaton.cpp simulations.cpp util.cpp
 
-debug: main.cpp automaton.cpp util.cpp util.h automaton.h
-	$(GXX) main.cpp -o main -D_DEBUG
+debug: main.cpp automaton.cpp simulations.cpp simulations.h util.cpp util.h automaton.h
+	$(GXX) main.cpp -o $(CFLAGS) main main.o automaton.o simulations.o util.o -D_DEBUG
 
 run:
 	make
