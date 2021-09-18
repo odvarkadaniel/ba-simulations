@@ -1,8 +1,8 @@
-#include"simulations.h"
-#include"util.h"
-
 #include<iostream>
 #include<queue>
+
+#include"simulations.h"
+#include"util.h"
 
 
 std::vector<std::pair<int, int>> Simulation::directSimulationRelation(Automaton &a) {
@@ -14,8 +14,8 @@ std::vector<std::pair<int, int>> Simulation::directSimulationRelation(Automaton 
     multimap<pair<int, int>, string> transitions = a.getTransitions();
     multimap<pair<int, int>, string> reversedTransitions = a.getReversedTransitions();
     
-    vector<pair<int, int>> omega;
-    queue<pair<int, int>> q;
+    vector<pair<int, int>> omega; // complement to the preorder
+    queue<pair<int, int>> q; // queue with the states
 
     vector<int> k, j;
 
@@ -63,14 +63,10 @@ std::vector<std::pair<int, int>> Simulation::directSimulationRelation(Automaton 
         }
     }
 
-    #ifdef _DEBUG
-
-    cout << "\ndi sim: ";
+    cout << "\nDirect simulation relation: ";
     for ( const auto& token : omega )
         std::cout << "(" << token.first << ", " << token.second << ")" << " ";
     cout << endl;
-
-    #endif
 
     return omega;
 }
