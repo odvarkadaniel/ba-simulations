@@ -1,13 +1,14 @@
 CXX = g++
-CFLAGS = -stc=c++17 -I.
+CFLAGS = -std=c++17 -I.
 
 all: main
+files = simulations.cpp automaton.cpp util.cpp
 
-build: main.cpp automaton.cpp automaton.h simulations.cpp simulations.h util.cpp util.h
-	$(GXX) main.cpp $(CFLAGS) -o main automaton.cpp simulations.cpp util.cpp
+make: main.cpp automaton.cpp automaton.h simulations.cpp simulations.h util.cpp util.h
+	$(CXX) main.cpp $(CFLAGS) -o main $(files)
 
 debug: main.cpp automaton.cpp simulations.cpp simulations.h util.cpp util.h automaton.h
-	$(GXX) main.cpp -o $(CFLAGS) main main.o automaton.o simulations.o util.o -D_DEBUG
+	$(CXX) main.cpp $(CFLAGS) -o main $(files) -D_DEBUG
 
 run:
 	make
