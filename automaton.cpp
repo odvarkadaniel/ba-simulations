@@ -29,6 +29,34 @@ std::multimap<std::pair<int, int>, std::string> Automaton::getReversedTransition
     return reversedTransitions;
 }
 
+void Automaton::addState(std::string str, std::vector<int>& stateVector) {
+    std::string stateName = "";
+
+    for(int i = 1; str[i] != 93; i++) {
+        stateName += str[i];
+    }
+    stateVector.push_back(std::stoi(stateName));
+}
+
+std::string Automaton::getStateForTransition(std::string str) {
+    std::string result = "";
+
+    for(int i = 1; str[i] != 93; i++) {
+        result += str[i];
+    }
+
+    return result;
+}
+
+void Automaton::addToAlphabet(std::string str, std::vector<std::string>& alphabetVector) {
+    std::string alphabet = "";
+
+    for(int i = 0; i != str.length(); i++) {
+        alphabet += str[i];
+    }
+    alphabetVector.push_back(alphabet);
+}
+
 Automaton Automaton::loadAutomaton(std::string filename) {
     using namespace std;
 
@@ -44,32 +72,45 @@ Automaton Automaton::loadAutomaton(std::string filename) {
         const char *tempc = temp.c_str();
 
         if(line == 1 && tempc[0] == 91) { // initial states
-            s = tempc[1];
-            omega.initialStates.push_back(atoi(s.c_str()));
-        } else if(line != 1 && tempc[1] == 44) { // transitions
+            omega.addState(temp, omega.initialStates);
+        }
+        //  else if(line != 1 && tempc[1] == 44) { // transitions
+        //     vector<string> v1 = split(temp, delimeterComma); // v1[0] is a char from alphabet
+        //     vector<string> v2 = split(v1[1], delimiterTransition);
+
+        //     // add character to alphabet
+        //     omega.alphabet.push_back(v1[0]);
+
+        //     // add the transition
+        //     const char *first = v2[0].c_str();
+        //     const char *second = v2[1].c_str();
+        //     s1 = first[1];
+        //     s2 = second[1];
+        //     omega.transitions.insert(make_pair(make_pair(atoi(s1.c_str()), atoi(s2.c_str())), v1[0]));
+
+        //     // add the reversed transitions
+        //     omega.reversedTransitions.insert(make_pair(make_pair(atoi(s2.c_str()), atoi(s1.c_str())), v1[0]));
+
+        //     // add the states
+        //     omega.states.push_back(atoi(s1.c_str()));
+        //     omega.states.push_back(atoi(s2.c_str()));
+
+        // } 
+        else if(line != 1 && tempc[0] == 91) { // accepting states
+            omega.addState(temp, omega.acceptingStates);
+        } else if(line != 1) {
             vector<string> v1 = split(temp, delimeterComma); // v1[0] is a char from alphabet
             vector<string> v2 = split(v1[1], delimiterTransition);
 
-            // add character to alphabet
-            omega.alphabet.push_back(v1[0]);
+            omega.addToAlphabet(v1[0], omega.alphabet);
 
-            // add the transition
-            const char *first = v2[0].c_str();
-            const char *second = v2[1].c_str();
-            s1 = first[1];
-            s2 = second[1];
-            omega.transitions.insert(make_pair(make_pair(atoi(s1.c_str()), atoi(s2.c_str())), v1[0]));
+            omega.addState(v2[0], omega.states);
+            omega.addState(v2[1], omega.states);
 
-            // add the reversed transitions
-            omega.reversedTransitions.insert(make_pair(make_pair(atoi(s2.c_str()), atoi(s1.c_str())), v1[0]));
+            omega.transitions.insert(make_pair(make_pair(stoi(getStateForTransition(v2[0])), stoi(getStateForTransition(v2[1]))), v1[0]));
 
-            // add the states
-            omega.states.push_back(atoi(s1.c_str()));
-            omega.states.push_back(atoi(s2.c_str()));
+            omega.reversedTransitions.insert(make_pair(make_pair(stoi(getStateForTransition(v2[1])), stoi(getStateForTransition(v2[0]))), v1[0]));
 
-        } else if(line != 1 && tempc[0] == 91) { // accepting states
-            s = tempc[1];
-            omega.acceptingStates.push_back(atoi(s.c_str()));
         } else {
             error_exit("couldn't parse the given automaton\n");
         }
@@ -80,6 +121,9 @@ Automaton Automaton::loadAutomaton(std::string filename) {
     readFile.close();
 
     // erase duplicates from states and alphabet
+    if(omega.alphabet.empty() || omega.states.empty()) {
+        error_exit("alphabet or states vectors are empty.\n");
+    }
     eraseDuplicates(omega.alphabet);
     eraseDuplicates(omega.states);
 
