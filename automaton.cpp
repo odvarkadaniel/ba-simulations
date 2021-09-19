@@ -73,42 +73,23 @@ Automaton Automaton::loadAutomaton(std::string filename) {
 
         if(line == 1 && tempc[0] == 91) { // initial states
             omega.addState(temp, omega.initialStates);
-        }
-        //  else if(line != 1 && tempc[1] == 44) { // transitions
-        //     vector<string> v1 = split(temp, delimeterComma); // v1[0] is a char from alphabet
-        //     vector<string> v2 = split(v1[1], delimiterTransition);
-
-        //     // add character to alphabet
-        //     omega.alphabet.push_back(v1[0]);
-
-        //     // add the transition
-        //     const char *first = v2[0].c_str();
-        //     const char *second = v2[1].c_str();
-        //     s1 = first[1];
-        //     s2 = second[1];
-        //     omega.transitions.insert(make_pair(make_pair(atoi(s1.c_str()), atoi(s2.c_str())), v1[0]));
-
-        //     // add the reversed transitions
-        //     omega.reversedTransitions.insert(make_pair(make_pair(atoi(s2.c_str()), atoi(s1.c_str())), v1[0]));
-
-        //     // add the states
-        //     omega.states.push_back(atoi(s1.c_str()));
-        //     omega.states.push_back(atoi(s2.c_str()));
-
-        // } 
-        else if(line != 1 && tempc[0] == 91) { // accepting states
+        } else if(line != 1 && tempc[0] == 91) { // accepting states
             omega.addState(temp, omega.acceptingStates);
         } else if(line != 1) {
             vector<string> v1 = split(temp, delimeterComma); // v1[0] is a char from alphabet
             vector<string> v2 = split(v1[1], delimiterTransition);
 
+            // add char to alphabet vector
             omega.addToAlphabet(v1[0], omega.alphabet);
 
+            // add states to states vector
             omega.addState(v2[0], omega.states);
             omega.addState(v2[1], omega.states);
 
+            // add transitions
             omega.transitions.insert(make_pair(make_pair(stoi(getStateForTransition(v2[0])), stoi(getStateForTransition(v2[1]))), v1[0]));
 
+            // add reversed transitions
             omega.reversedTransitions.insert(make_pair(make_pair(stoi(getStateForTransition(v2[1])), stoi(getStateForTransition(v2[0]))), v1[0]));
 
         } else {
@@ -126,8 +107,6 @@ Automaton Automaton::loadAutomaton(std::string filename) {
     }
     eraseDuplicates(omega.alphabet);
     eraseDuplicates(omega.states);
-
-    //vector<int> new1 = statesWithoutACC(omega.states, omega.acceptingStates);
 
 
     #ifdef _DEBUG
@@ -152,13 +131,6 @@ Automaton Automaton::loadAutomaton(std::string filename) {
     }
 
     cout << endl;
-
-    // cout << "states without acc: ";
-    // for(int i: new1) {
-    //     cout << i << ", ";
-    // }
-
-    // cout << endl;
 
     cout << "alphabet: ";
     for(string i: omega.alphabet) {
