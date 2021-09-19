@@ -15,6 +15,10 @@ class Automaton {
         std::vector<std::string> getAlphabet();
         std::multimap<std::pair<int, int>, std::string> getTransitions();
         std::multimap<std::pair<int, int>, std::string> getReversedTransitions();
+
+        void addToAlphabet(std::string str, std::vector<std::string>& alphabetVector);
+        void addState(std::string str, std::vector<int>& stateVector);
+        std::string getStateForTransition(std::string str);
     protected:
         std::vector<std::string> alphabet;
         std::vector<int> states;

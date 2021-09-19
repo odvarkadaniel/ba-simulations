@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
     using namespace std;
 
     Automaton a;
-    a = a.loadAutomaton("omega.aut");
+    a = a.loadAutomaton("omega.ba");
 
     Simulation s;
     
