@@ -1,5 +1,5 @@
 CXX = g++
-CFLAGS = -std=c++17 -I.
+CFLAGS = -std=c++17 -I. -Wzero-as-null-pointer-constant
 
 all: main
 files = simulations.cpp automaton.cpp util.cpp
@@ -15,7 +15,7 @@ run:
 	./main
 
 rund:
-	debug
+	make debug
 	./main
 
 clean:

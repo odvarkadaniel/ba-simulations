@@ -5,28 +5,16 @@
 #include"util.h"
 
 
-std::vector<int> Automaton::getStates() {
-    return states;
-}
+bool Automaton::isInTransition(std::multimap<std::pair<int, int>, std::string>& transition, int t1, std::string alpha) {
+    using namespace std;
 
-std::vector<int> Automaton::getInitialStates() {
-    return initialStates;
-}
+    for(const auto& [p, val] : transition) {
+        if(t1 == p.first && val == alpha) {
+            return true;
+        }
+    }
 
-std::vector<int> Automaton::getAcceptingStates() {
-    return acceptingStates;
-}
-
-std::vector<std::string> Automaton::getAlphabet() {
-    return alphabet;
-}
-
-std::multimap<std::pair<int, int>, std::string> Automaton::getTransitions() {
-    return transitions;
-}
-
-std::multimap<std::pair<int, int>, std::string> Automaton::getReversedTransitions() {
-    return reversedTransitions;
+    return false;
 }
 
 void Automaton::addState(std::string str, std::vector<int>& stateVector) {
@@ -102,9 +90,6 @@ Automaton Automaton::loadAutomaton(std::string filename) {
     readFile.close();
 
     // erase duplicates from states and alphabet
-    if(omega.alphabet.empty() || omega.states.empty()) {
-        error_exit("alphabet or states vectors are empty.\n");
-    }
     eraseDuplicates(omega.alphabet);
     eraseDuplicates(omega.states);
 
@@ -150,6 +135,8 @@ Automaton Automaton::loadAutomaton(std::string filename) {
     for(const auto& elem : omega.reversedTransitions) {
         std::cout << elem.first.first << " " << elem.second << " " << elem.first.second << "\n";
     }
+
+    cout << endl;
 
     #endif
     
