@@ -4,30 +4,6 @@
 #include"simulations.h"
 #include"util.h"
 
-void uniqueQueue(std::queue<std::pair<int, int>> &q) {
-    using namespace std;
-
-    vector<pair<int, int>> temp;
-    while(!q.empty()) {
-        temp.push_back(q.front());
-        q.pop();
-    }
-
-    eraseDuplicates(temp);
-
-    #ifdef _DEBUG
-
-    cout << "\nInitialized queue: ";
-    for(const auto& x : temp) {
-        cout << "(" << x.first << ", " << x.second << ")" << " ";
-    }
-
-    #endif
-
-    for(const auto& x : temp) {
-        q.push(x);
-    }
-}
 
 std::vector<std::pair<int, int>> Simulation::directSimulationRelation(Automaton &a) {
     using namespace std;
@@ -60,12 +36,12 @@ std::vector<std::pair<int, int>> Simulation::directSimulationRelation(Automaton 
                 || (a.isInTransition(transitions, i, alpha) && !a.isInTransition(transitions, j, alpha))) {
                     q.push(make_pair(i, j));
                     omega.push_back(make_pair(i, j));
+                    break;
                 }
             }
         }
     }
 
-    uniqueQueue(q);
     eraseDuplicates(omega);
 
     while(!q.empty()) {
