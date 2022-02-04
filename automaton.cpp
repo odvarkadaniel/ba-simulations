@@ -6,8 +6,6 @@
 
 
 bool Automaton::isInTransition(std::multimap<std::pair<int, int>, std::string>& transition, int t1, std::string alpha) {
-    using namespace std;
-
     for(const auto& [p, val] : transition) {
         if(t1 == p.first && val == alpha) {
             return true;

@@ -5,17 +5,28 @@
 #include<string>
 #include<map>
 
+template <typename State, typename Symbol>
+struct Transition {
+  State from;
+  State to;
+  Symbol symbol;
+
+  bool operator==(const Transition& other) const
+  {
+    return other.from == from && other.to == to && other.symbol == symbol;
+  }
+};
 
 class Automaton {
     public:
         Automaton loadAutomaton(std::string filename);
 
-        std::vector<int> getStates() { return states; }
-        std::vector<int> getInitialStates() { return initialStates; }
-        std::vector<int> getAcceptingStates() { return acceptingStates; }
-        std::vector<std::string> getAlphabet() { return alphabet; }
-        std::multimap<std::pair<int, int>, std::string> getTransitions() { return transitions; }
-        std::multimap<std::pair<int, int>, std::string> getReversedTransitions() { return reversedTransitions; }
+        std::vector<int> getStates() { return this->states; }
+        std::vector<int> getInitialStates() { return this->initialStates; }
+        std::vector<int> getAcceptingStates() { return this->acceptingStates; }
+        std::vector<std::string> getAlphabet() { return this->alphabet; }
+        std::multimap<std::pair<int, int>, std::string> getTransitions() { return this->transitions; }
+        std::multimap<std::pair<int, int>, std::string> getReversedTransitions() { return this->reversedTransitions; }
 
         void addToAlphabet(std::string str, std::vector<std::string>& alphabetVector);
         void addState(std::string str, std::vector<int>& stateVector);
