@@ -29,14 +29,14 @@ std::set<std::pair<State, State>> Simulation<State, Symbol>::directSimulationRel
     set<pair<State, State>> omega; // complement to the preorder
     queue<pair<State, State>> q; // queue with the states
 
-    vector<State> k, j;
+    set<State> k, j;
 
     set<State> statesWoACC = statesWithoutACC(states, acceptingStates);
 
     // for(const auto& i : acceptingStates) {
     //     for(const auto& j : statesWoACC) {
     //         q.push(make_pair(i, j));
-    //         omega.push_back(make_pair(i, j));
+    //         omega.insert({make_pair(i, j)});
     //         cout << "(" << i << ", " << j << ")" << " ";
     //     }
     // }
@@ -54,8 +54,6 @@ std::set<std::pair<State, State>> Simulation<State, Symbol>::directSimulationRel
         }
     }
 
-    //eraseDuplicates(omega); asi nepotrebuju no more
-
     while(!q.empty()) {
         auto m = q.front().first;
         auto n = q.front().second;
@@ -68,7 +66,7 @@ std::set<std::pair<State, State>> Simulation<State, Symbol>::directSimulationRel
             for(const auto& [pair, value] : reversedTransitions) {
                 if (n == pair.first && pair.second == alpha) {
                     for(const auto& t : value)
-                        k.push_back(t);
+                        k.insert({t});
                 }
             }
             for(const auto& memberK : k) {
@@ -76,7 +74,7 @@ std::set<std::pair<State, State>> Simulation<State, Symbol>::directSimulationRel
                     for(const auto& [p, val] : reversedTransitions) {
                         if (m == p.first && p.second == alpha) {
                             for(const auto& t : val)
-                                j.push_back(t);
+                                j.insert({t});
                         }
                     }
 
