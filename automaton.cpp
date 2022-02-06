@@ -4,10 +4,10 @@
 #include"automaton.h"
 #include"util.h"
 
-
-bool Automaton::isInTransition(std::multimap<std::pair<int, int>, std::string>& transition, int t1, std::string alpha) {
+template<>
+bool Automaton<std::string, std::string>::isInTransition(std::map<std::pair<std::string, std::string>, std::set<std::string>>& transition, std::string t1, std::string alpha) {
     for(const auto& [p, val] : transition) {
-        if(t1 == p.first && val == alpha) {
+        if (t1 == p.first && p.first == alpha) {
             return true;
         }
     }
@@ -15,16 +15,18 @@ bool Automaton::isInTransition(std::multimap<std::pair<int, int>, std::string>& 
     return false;
 }
 
-void Automaton::addState(std::string str, std::vector<int>& stateVector) {
+template<>
+void Automaton<std::string, std::string>::addState(std::string str, std::set<std::string>& stateVector) {
     std::string stateName = "";
 
     for(int i = 1; str[i] != 93; i++) {
         stateName += str[i];
     }
-    stateVector.push_back(std::stoi(stateName));
+    stateVector.insert({stateName});
 }
 
-std::string Automaton::getStateForTransition(std::string str) {
+template<>
+std::string Automaton<std::string, std::string>::getStateForTransition(std::string str) {
     std::string result = "";
 
     for(int i = 1; str[i] != 93; i++) {
@@ -34,19 +36,21 @@ std::string Automaton::getStateForTransition(std::string str) {
     return result;
 }
 
-void Automaton::addToAlphabet(std::string str, std::vector<std::string>& alphabetVector) {
+template<>
+void Automaton<std::string, std::string>::addToAlphabet(std::string str, std::set<std::string>& alphabetVector) {
     std::string alphabet = "";
 
     for(int i = 0; i != str.length(); i++) {
         alphabet += str[i];
     }
-    alphabetVector.push_back(alphabet);
+    alphabetVector.insert({alphabet});
 }
 
-Automaton Automaton::loadAutomaton(std::string filename) {
+template<>
+Automaton<std::string, std::string> Automaton<std::string, std::string>::loadAutomaton(std::string filename) {
     using namespace std;
 
-    Automaton omega;
+    Automaton<string, string> omega;
     fstream readFile(filename);
     string temp, s, s1, s2;
     int line = 1;
@@ -65,18 +69,23 @@ Automaton Automaton::loadAutomaton(std::string filename) {
             vector<string> v1 = split(temp, delimeterComma); // v1[0] is a char from alphabet
             vector<string> v2 = split(v1[1], delimiterTransition);
 
-            // add char to alphabet vector
+            // add char to alphabet set
             omega.addToAlphabet(v1[0], omega.alphabet);
 
-            // add states to states vector
+            // add states to states set
             omega.addState(v2[0], omega.states);
             omega.addState(v2[1], omega.states);
 
             // add transitions
-            omega.transitions.insert(make_pair(make_pair(stoi(getStateForTransition(v2[0])), stoi(getStateForTransition(v2[1]))), v1[0]));
-
+            omega.transitions[make_pair(getStateForTransition(v2[0]), v1[0])].insert(getStateForTransition(v2[1]));
+            //omega.addNewTransition(make_pair(getStateForTransition(v2[0]), v1[0]), set<string>({getStateForTransition(v2[1])}));
+            //omega.transitions.insert({make_pair(getStateForTransition(v2[0]), v1[0]), set<string>({getStateForTransition(v2[1])})});
+            //omega.transitions[make_pair(getStateForTransition(v2[0]), v1[0])] = set<string>({getStateForTransition(v2[1])});
+            
             // add reversed transitions
-            omega.reversedTransitions.insert(make_pair(make_pair(stoi(getStateForTransition(v2[1])), stoi(getStateForTransition(v2[0]))), v1[0]));
+            omega.reversedTransitions[make_pair(getStateForTransition(v2[1]), v1[0])].insert(getStateForTransition(v2[0]));
+            //omega.addNewRevTransition(make_pair(getStateForTransition(v2[1]), v1[0]), set<string>({getStateForTransition(v2[0])}));
+            //omega.reversedTransitions.insert({make_pair(getStateForTransition(v2[1]), v1[0]), set<string>({getStateForTransition(v2[0])})});
 
         } else {
             error_exit("couldn't parse the given automaton\n");
@@ -88,35 +97,35 @@ Automaton Automaton::loadAutomaton(std::string filename) {
     readFile.close();
 
     // erase duplicates from states and alphabet
-    eraseDuplicates(omega.alphabet);
-    eraseDuplicates(omega.states);
+    // eraseDuplicates(omega.alphabet);
+    // eraseDuplicates(omega.states);
 
 
     #ifdef _DEBUG
 
     cout << "initial states: ";
-    for(int i: omega.initialStates) {
+    for(const auto &i: omega.initialStates) {
         cout << i << ", ";
     }
     
     cout << endl;
 
     cout << "states: ";
-    for(int i: omega.states) {
+    for(const auto &i: omega.states) {
         cout << i << ", ";
     }
 
     cout << endl;
 
     cout << "accepting states: ";
-    for(int i: omega.acceptingStates) {
+    for(const auto &i: omega.acceptingStates) {
         cout << i << ", ";
     }
 
     cout << endl;
 
     cout << "alphabet: ";
-    for(string i: omega.alphabet) {
+    for(const auto &i: omega.alphabet) {
         cout << i << ", ";
     }
 
@@ -124,14 +133,17 @@ Automaton Automaton::loadAutomaton(std::string filename) {
 
     cout << "transitions: \n";
     for(const auto& elem : omega.transitions) {
-        std::cout << elem.first.first << " " << elem.second << " " << elem.first.second << "\n";
+        for(const auto& e : elem.second) {
+            std::cout << elem.first.first << " " << elem.first.second << " " << e << endl;
+        }
     }
 
     cout << endl;
 
     cout << "reversed transitions: \n";
     for(const auto& elem : omega.reversedTransitions) {
-        std::cout << elem.first.first << " " << elem.second << " " << elem.first.second << "\n";
+        for(const auto& e : elem.second)
+            std::cout << elem.first.first << " " << elem.first.second << " " << e << endl;
     }
 
     cout << endl;

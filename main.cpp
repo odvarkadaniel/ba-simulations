@@ -7,16 +7,15 @@
 int main(int argc, char *argv[]) {
     using namespace std;
 
-    Automaton a;
+    Automaton<string, string> a;
     a = a.loadAutomaton("omega.ba");
 
-    //Simulation s;
-    //vector<pair<int, int>> omega = s.directSimulationRelation(a);
+    Simulation<string, string> s;
+    vector<pair<string, string>> omega = s.directSimulationRelation(a);
 
-
-    std::multimap<std::pair<int, int>, std::string> transitions = a.getTransitions();
-    parityGame<int, string> pg;
-    pg.constructFPG(a, transitions);
+//    Delta<std::string, std::string> transitions = a.getTransitions();
+//    parityGame<string, string> pg;
+//    pg.constructFPG(a, transitions);
     
     return 0; 
 }

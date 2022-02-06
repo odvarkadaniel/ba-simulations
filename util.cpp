@@ -30,30 +30,3 @@ std::vector<std::string> split(std::string original, std::string delimiter) {
     res.push_back (original.substr (pos_start));
     return res;
 }
-
-std::vector<int> statesWithoutACC(std::vector<int> &states, std::vector<int> &acceptingStates) {
-    using namespace std;
-
-    vector<int> copy = states;
-
-    for(int i = 0; i < acceptingStates.size(); i++) {
-        if(find(copy.begin(), copy.end(), acceptingStates[i]) != copy.end()) {
-            copy.erase(remove(copy.begin(), copy.end(), acceptingStates[i]));
-        }
-    }
-    return copy;
-}
-
-int card(std::multimap<std::pair<int, int>, std::string> transition, int k, std::string alpha) {
-    using namespace std;
-
-    u_int counter = 0;
-
-    for(const auto& tr : transition)  {
-        if(tr.first.first == k && tr.second == alpha) {
-            counter++;
-        }
-    }
-
-    return counter;
-}
