@@ -6,15 +6,18 @@
 #include"util.h"
 
 template<typename State, typename Symbol>
-class Simulation {
+class Simulation : public Automaton<State, Symbol> {
     public:
-        std::vector<std::pair<State, Symbol>> directSimulationRelation(Automaton<State, Symbol> &a);
+        // StateRelation useful for direct simulation
+        typedef std::set<std::pair<State, State>> StateRelation;
+
+         StateRelation directSimulationRelation(Automaton<State, Symbol> &a);
 
 };
 
 
 template<typename State, typename Symbol>
-std::vector<std::pair<State, Symbol>> Simulation<State, Symbol>::directSimulationRelation(Automaton<State, Symbol> &a) {
+std::set<std::pair<State, State>> Simulation<State, Symbol>::directSimulationRelation(Automaton<State, Symbol> &a) {
     using namespace std;
 
     set<string> states = a.getStates();
@@ -23,7 +26,7 @@ std::vector<std::pair<State, Symbol>> Simulation<State, Symbol>::directSimulatio
     Delta<string, string> transitions = a.getTransitions();
     Delta<string, string> reversedTransitions = a.getReversedTransitions();
 
-    vector<pair<State, State>> omega; // complement to the preorder
+    set<pair<State, State>> omega; // complement to the preorder
     queue<pair<State, State>> q; // queue with the states
 
     vector<State> k, j;
@@ -44,7 +47,7 @@ std::vector<std::pair<State, Symbol>> Simulation<State, Symbol>::directSimulatio
                 if(((find(acceptingStates.begin(), acceptingStates.end(), i) != acceptingStates.end()) && (find(acceptingStates.begin(), acceptingStates.end(), j) == acceptingStates.end()))
                    || (a.isInTransition(transitions, i, alpha) && !a.isInTransition(transitions, j, alpha))) {
                     q.push(make_pair(i, j));
-                    omega.push_back(make_pair(i, j));
+                    omega.insert({make_pair(i, j)});
                     break;
                 }
             }
@@ -79,7 +82,7 @@ std::vector<std::pair<State, Symbol>> Simulation<State, Symbol>::directSimulatio
 
                     for(const auto& one : j) {
                         if(find(omega.begin(), omega.end(), make_pair(one, memberK)) == omega.end()) {
-                            omega.push_back(make_pair(one, memberK));
+                            omega.insert({make_pair(one, memberK)});
                             q.push(make_pair(one, memberK));
                         }
                     }

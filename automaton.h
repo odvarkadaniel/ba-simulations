@@ -27,8 +27,6 @@ class Automaton {
     public:
         typedef std::set<State> SetStates;
         typedef std::set<Symbol> SetSymbols;
-        // StateRelation useful for direct simulation
-        typedef std::set<std::pair<State, State>> StateRelation;
 
         Automaton loadAutomaton(std::string filename);
 

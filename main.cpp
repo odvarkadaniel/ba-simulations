@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     a = a.loadAutomaton("omega.ba");
 
     Simulation<string, string> s;
-    vector<pair<string, string>> omega = s.directSimulationRelation(a);
+    set<pair<string, string>> omega = s.directSimulationRelation(a);
 
 //    Delta<std::string, std::string> transitions = a.getTransitions();
 //    parityGame<string, string> pg;
