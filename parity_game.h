@@ -13,13 +13,48 @@ class parityGame : protected Automaton<State, Symbol> {
         void constructFPG(Automaton<State, Symbol> omega, std::map<std::pair<State, Symbol>, std::set<std::string>> &transitions);
         int getPriorityv0F(std::set<State> acceptingState, State v0);
         int getPriorityv1F(std::set<State> acceptingState, State v1f, State v1s);
+        void constructEFA(std::map<std::pair<State, Symbol>, std::set<State>>& transitions);
 
     protected:
         std::set<std::tuple<State, State, Symbol, int>> v0F;
         std::set<std::tuple<State, State, int>> v1F;
-        //std::pair<int, int> EFA;
+        std::map<std::pair<State, Symbol>, std::set<State>> EFA0;
+        std::map<std::pair<State, Symbol>, std::set<State>> EFA1;
 
 };
+
+/**
+ * Transition from v0F to v1F is stored in EFA0
+ * Transition from v1F to v0F is stored in EFA1
+ * @tparam State
+ * @tparam Symbol
+ * @param transitions
+ */
+template<typename State, typename Symbol>
+void parityGame<State, Symbol>::constructEFA(std::map<std::pair<State, Symbol>, std::set<State>>& transitions) {
+    using namespace std;
+
+    for(const auto& v0 : v0F) {
+        for(const auto& v1 : v1F) {
+            for(const auto& [tr, val] : transitions) {
+                if(get<1>(v0) == tr.first && get<2>(v0) == tr.second && get<0>(v0) == get<0>(v1)) {
+                    for(const auto& setval : val) {
+                        if(get<1>(v1) == setval) {
+                            EFA0[make_pair(get<1>(v0), get<2>(v0))].insert(get<0>(v1));
+                        }
+                    }
+                }
+                if(get<0>(v1) == tr.first && get<2>(v0) == tr.second && get<1>(v1) == get<1>(v0)) {
+                    for(const auto& setval : val) {
+                        if(get<0>(v0) == setval) {
+                            EFA1[make_pair(get<0>(v1), get<2>(v0))].insert(get<0>(v0));
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 template<typename State, typename Symbol>
 int parityGame<State, Symbol>::getPriorityv1F(std::set<State> acceptingState, State v1f, State v1s) {
@@ -114,6 +149,8 @@ void parityGame<State, Symbol>::constructFPG(Automaton<State, Symbol> omega, std
         v1F.insert(make_tuple(get<0>(v1), get<1>(v1), p));
     }
 
+    constructEFA(transitions);
+
     #ifdef _DEBUG
     cout << "v0F: \n";
     for (const auto& x : v0F) {
@@ -125,6 +162,20 @@ void parityGame<State, Symbol>::constructFPG(Automaton<State, Symbol> omega, std
     cout << "v1F: \n";
     for(const auto &x : v1F) {
         cout << get<0>(x) << ' ' << get<1>(x) << ' ' << get<2>(x) << '\n';
+    }
+
+    cout << "EFA0: \n";
+    for(const auto& elem : EFA0) {
+        for(const auto& e : elem.second) {
+            std::cout << elem.first.first << " " << elem.first.second << " " << e << endl;
+        }
+    }
+
+    cout << "EFA1: \n";
+    for(const auto& elem : EFA1) {
+        for(const auto& e : elem.second) {
+            std::cout << elem.first.first << " " << elem.first.second << " " << e << endl;
+        }
     }
     #endif
 
