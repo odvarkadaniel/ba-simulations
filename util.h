@@ -7,10 +7,16 @@
 #include<algorithm>
 #include<set>
 
+// functions
 void error_exit(const char *fmt, ...);
-
 std::vector<std::string> split(std::string original, std::string delimiter);
 
+/**
+ * Erases all duplicates from a vector
+ * @tparam S
+ * @tparam I
+ * @param vec
+ */
 template<typename S, typename I>
 void eraseDuplicates(std::vector<S, I> &vec) { 
     using namespace std;
@@ -26,14 +32,13 @@ void eraseDuplicates(std::vector<S, I> &vec) {
     return;
 }
 
-//template<typename State>
-//std::set<State> statesWithoutACC(std::set<State>& states, std::set<State>& acceptingStates);
-//
-//template<typename State, typename Symbol>
-//int card(std::map<std::pair<State,Symbol>, std::set<State>>& transition, int k, std::string alpha);
-
-
-
+/**
+ * Removes accepting states from Q
+ * @tparam State
+ * @param states
+ * @param acceptingStates
+ * @return
+ */
 template<typename State>
 std::set<State> statesWithoutACC(std::set<State> &states, std::set<State> &acceptingStates) {
     using namespace std;
@@ -41,14 +46,21 @@ std::set<State> statesWithoutACC(std::set<State> &states, std::set<State> &accep
     set<State> copy = states;
 
     for(const auto& accSt : acceptingStates) {
-//        if(find(copy.begin(), copy.end(), accSt) != copy.end()) {
-//            copy.erase(remove(copy.begin(), copy.end(), accSt));
-//        }
-    copy.erase(accSt);
+        copy.erase(accSt);
     }
     return copy;
 }
 
+/**
+ * Computes a card number needed for direct simulation
+ * Number of transitions from a state S with a symbol A
+ * @tparam State
+ * @tparam Symbol
+ * @param transition
+ * @param k
+ * @param alpha
+ * @return
+ */
 template<typename State, typename Symbol>
 int card(std::map<std::pair<State, Symbol>, std::set<State>>& transition, State k, Symbol alpha) {
     using namespace std;
