@@ -57,13 +57,17 @@ std::set<std::pair<State, State>> Simulation<State, Symbol>::directSimulationRel
         for(const auto& j : states) {
             for(const auto& alpha : alphabet) {
                 if(((find(acceptingStates.begin(), acceptingStates.end(), i) != acceptingStates.end()) && (find(acceptingStates.begin(), acceptingStates.end(), j) == acceptingStates.end()))
-                   || (a.isInTransition(transitions, i, alpha) && !a.isInTransition(transitions, j, alpha))) {
+                   || (a.isInTransition(i, alpha) && (!a.isInTransition(j, alpha)))) {
                     q.push(make_pair(i, j));
                     omega.insert({make_pair(i, j)});
                     break;
                 }
             }
         }
+    }
+
+    for(const auto& x : omega) {
+        cout << x.first << ", " << x.second << endl;
     }
 
     while(!q.empty()) {

@@ -12,9 +12,9 @@
  * @return
  */
 template<>
-bool Automaton<std::string, std::string>::isInTransition(std::map<std::pair<std::string, std::string>, std::set<std::string>>& transition, std::string t1, std::string alpha) {
-    for(const auto& [p, val] : transition) {
-        if (t1 == p.first && p.first == alpha) {
+bool Automaton<std::string, std::string>::isInTransition(std::string t1, std::string alpha) {
+    for(const auto& [p, val] : this->transitions) {
+        if (t1 == p.first && p.second == alpha) {
             return true;
         }
     }

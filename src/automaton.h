@@ -33,7 +33,7 @@ class Automaton {
         void addToAlphabet(std::string str, std::set<std::string>& alphabetVector);
         void addState(std::string str, std::set<std::string>& stateVector);
         std::string getStateForTransition(std::string str);
-        bool isInTransition(std::map<std::pair<std::string, std::string>, std::set<std::string>>& transition, std::string t1, std::string alpha);
+        bool isInTransition(std::string t1, std::string alpha);
         void addNewTransition(std::pair<State, Symbol> src, std::set<State> dst);
         void addNewRevTransition(std::pair<State, Symbol> src, std::set<State> dst);
     protected:

@@ -2,16 +2,16 @@ CXX = g++
 CFLAGS = -std=c++17 -I. -Wzero-as-null-pointer-constant
 
 all: main
-files = automaton.cpp util.cpp
+files = src/automaton.cpp src/util.cpp
 
-build: main.cpp automaton.cpp simulations.h util.cpp util.h automaton.h parity_game.h
-	$(CXX) main.cpp $(CFLAGS) -o main $(files)
+build: src/main.cpp src/automaton.cpp src/simulations.h src/util.cpp src/util.h src/automaton.h src/parity_game.h
+	$(CXX) src/main.cpp $(CFLAGS) -o main $(files)
 
-debug: main.cpp automaton.cpp simulations.h util.cpp util.h automaton.h parity_game.h
-	$(CXX) main.cpp -g $(CFLAGS) -o main $(files) -D_DEBUG
+debug: src/main.cpp src/automaton.cpp src/simulations.h src/util.cpp src/util.h src/automaton.h src/parity_game.h
+	$(CXX) src/main.cpp -g $(CFLAGS) -o main $(files) -D_DEBUG
 
-debug2: main.cpp automaton.cpp simulations.h util.cpp util.h automaton.h parity_game.h
-	$(CXX) main.cpp -g $(CFLAGS) -o main $(files) -D_DEBUG
+debug2: src/main.cpp src/automaton.cpp src/simulations.h src/util.cpp src/util.h src/automaton.h src/parity_game.h
+	$(CXX) src/main.cpp -g $(CFLAGS) -o main $(files) -D_DEBUG
 
 run:
 	make build
