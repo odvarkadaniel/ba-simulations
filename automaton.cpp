@@ -4,6 +4,13 @@
 #include"automaton.h"
 #include"util.h"
 
+/**
+ * Checks whether such transition exists - used for direct simulation calculation
+ * @param transition
+ * @param t1
+ * @param alpha
+ * @return
+ */
 template<>
 bool Automaton<std::string, std::string>::isInTransition(std::map<std::pair<std::string, std::string>, std::set<std::string>>& transition, std::string t1, std::string alpha) {
     for(const auto& [p, val] : transition) {
@@ -15,6 +22,11 @@ bool Automaton<std::string, std::string>::isInTransition(std::map<std::pair<std:
     return false;
 }
 
+/**
+ * Adds state to a state set
+ * @param str
+ * @param stateVector
+ */
 template<>
 void Automaton<std::string, std::string>::addState(std::string str, std::set<std::string>& stateVector) {
     std::string stateName = "";
@@ -25,6 +37,12 @@ void Automaton<std::string, std::string>::addState(std::string str, std::set<std
     stateVector.insert({stateName});
 }
 
+/**
+ * Parses the input as an transition
+ * Gets rid of [], e.g. [3] is transformed into 3
+ * @param str
+ * @return
+ */
 template<>
 std::string Automaton<std::string, std::string>::getStateForTransition(std::string str) {
     std::string result = "";
@@ -36,6 +54,11 @@ std::string Automaton<std::string, std::string>::getStateForTransition(std::stri
     return result;
 }
 
+/**
+ * Adds an element to an alphabet
+ * @param str
+ * @param alphabetVector
+ */
 template<>
 void Automaton<std::string, std::string>::addToAlphabet(std::string str, std::set<std::string>& alphabetVector) {
     std::string alphabet = "";
@@ -46,6 +69,11 @@ void Automaton<std::string, std::string>::addToAlphabet(std::string str, std::se
     alphabetVector.insert({alphabet});
 }
 
+/**
+ * Loads an automaton from .ba formatted file into Automaton class
+ * @param filename
+ * @return
+ */
 template<>
 Automaton<std::string, std::string> Automaton<std::string, std::string>::loadAutomaton(std::string filename) {
     using namespace std;
@@ -78,14 +106,9 @@ Automaton<std::string, std::string> Automaton<std::string, std::string>::loadAut
 
             // add transitions
             omega.transitions[make_pair(getStateForTransition(v2[0]), v1[0])].insert(getStateForTransition(v2[1]));
-            //omega.addNewTransition(make_pair(getStateForTransition(v2[0]), v1[0]), set<string>({getStateForTransition(v2[1])}));
-            //omega.transitions.insert({make_pair(getStateForTransition(v2[0]), v1[0]), set<string>({getStateForTransition(v2[1])})});
-            //omega.transitions[make_pair(getStateForTransition(v2[0]), v1[0])] = set<string>({getStateForTransition(v2[1])});
             
             // add reversed transitions
             omega.reversedTransitions[make_pair(getStateForTransition(v2[1]), v1[0])].insert(getStateForTransition(v2[0]));
-            //omega.addNewRevTransition(make_pair(getStateForTransition(v2[1]), v1[0]), set<string>({getStateForTransition(v2[0])}));
-            //omega.reversedTransitions.insert({make_pair(getStateForTransition(v2[1]), v1[0]), set<string>({getStateForTransition(v2[0])})});
 
         } else {
             error_exit("couldn't parse the given automaton\n");

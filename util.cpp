@@ -4,6 +4,11 @@
 
 #include"util.h"
 
+/**
+ * Exits with appropriate message
+ * @param fmt
+ * @param ...
+ */
 void error_exit(const char *fmt, ...)
 {
 	va_list(args);
@@ -14,6 +19,12 @@ void error_exit(const char *fmt, ...)
 	exit(1);
 }
 
+/**
+ * Splits a vector with a specified delimiter
+ * @param original
+ * @param delimiter
+ * @return
+ */
 std::vector<std::string> split(std::string original, std::string delimiter) {
     using namespace std;
     

@@ -5,6 +5,11 @@
 #include<iostream>
 #include<tuple>
 
+/**
+ * Class that holds the parity game parts
+ * @tparam State
+ * @tparam Symbol
+ */
 template<typename State, typename Symbol>
 class parityGame : protected Automaton<State, Symbol> {
     public:
@@ -16,10 +21,10 @@ class parityGame : protected Automaton<State, Symbol> {
         void constructEFA(std::map<std::pair<State, Symbol>, std::set<State>>& transitions);
 
     protected:
-        std::set<std::tuple<State, State, Symbol, int>> v0F;
-        std::set<std::tuple<State, State, int>> v1F;
-        std::map<std::pair<State, Symbol>, std::set<State>> EFA0;
-        std::map<std::pair<State, Symbol>, std::set<State>> EFA1;
+        std::set<std::tuple<State, State, Symbol, int>> v0F; // set with Player 0's states
+        std::set<std::tuple<State, State, int>> v1F; // set with Player 1's states
+        std::map<std::pair<State, Symbol>, std::set<State>> EFA0; // map with the transitions from P0 to P1
+        std::map<std::pair<State, Symbol>, std::set<State>> EFA1; // map with the transitions from P1 to P0
 
 };
 
@@ -56,6 +61,15 @@ void parityGame<State, Symbol>::constructEFA(std::map<std::pair<State, Symbol>, 
     }
 }
 
+/**
+ * Returns a priority to a state for Player 1
+ * @tparam State
+ * @tparam Symbol
+ * @param acceptingState
+ * @param v1f
+ * @param v1s
+ * @return
+ */
 template<typename State, typename Symbol>
 int parityGame<State, Symbol>::getPriorityv1F(std::set<State> acceptingState, State v1f, State v1s) {
     using namespace std;
@@ -72,6 +86,14 @@ int parityGame<State, Symbol>::getPriorityv1F(std::set<State> acceptingState, St
     return 2;
 }
 
+/**
+ * Returns a priority for Player 0's state
+ * @tparam State
+ * @tparam Symbol
+ * @param acceptingState
+ * @param v0
+ * @return
+ */
 template<typename State, typename Symbol>
 int parityGame<State, Symbol>::getPriorityv0F(std::set<State> acceptingState, State v0) {
     using namespace std;
@@ -86,6 +108,12 @@ int parityGame<State, Symbol>::getPriorityv0F(std::set<State> acceptingState, St
     return 2;
 }
 
+/**
+ * Create all the states that are owned by Player 0
+ * @tparam State
+ * @tparam Symbol
+ * @param a
+ */
 template <typename State, typename Symbol>
 void parityGame<State, Symbol>::constructv0F(Automaton<State, Symbol> a) {
     using namespace std;
@@ -111,6 +139,12 @@ void parityGame<State, Symbol>::constructv0F(Automaton<State, Symbol> a) {
     return;
 }
 
+/**
+ * Create all the states that are owned by Player 1
+ * @tparam State
+ * @tparam Symbol
+ * @param states
+ */
 template <typename State, typename Symbol>
 void parityGame<State, Symbol>::constructv1F(std::set<State> &states) {
     using namespace std;
@@ -123,7 +157,15 @@ void parityGame<State, Symbol>::constructv1F(std::set<State> &states) {
     return;
 }
 
-
+/**
+ * Main function for the parity game construction
+ * Create all of the parts needed
+ * At this part we receive a parity game graph
+ * @tparam State
+ * @tparam Symbol
+ * @param omega
+ * @param transitions
+ */
 template <typename State, typename Symbol>
 void parityGame<State, Symbol>::constructFPG(Automaton<State, Symbol> omega, std::map<std::pair<State, Symbol>, std::set<std::string>> &transitions) {
     using namespace std;

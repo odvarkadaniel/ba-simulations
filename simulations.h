@@ -5,6 +5,11 @@
 #include"automaton.h"
 #include"util.h"
 
+/**
+ * Class that holds stuff for simulations
+ * @tparam State
+ * @tparam Symbol
+ */
 template<typename State, typename Symbol>
 class Simulation : public Automaton<State, Symbol> {
     public:
@@ -15,7 +20,14 @@ class Simulation : public Automaton<State, Symbol> {
 
 };
 
-
+/**
+ * Computes a COMPLEMENT to a preorder
+ * This complement is returned as a set of pairs
+ * @tparam State
+ * @tparam Symbol
+ * @param a
+ * @return
+ */
 template<typename State, typename Symbol>
 std::set<std::pair<State, State>> Simulation<State, Symbol>::directSimulationRelation(Automaton<State, Symbol> &a) {
     using namespace std;

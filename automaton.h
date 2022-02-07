@@ -6,22 +6,14 @@
 #include<map>
 #include<set>
 
-template <typename State, typename Symbol>
-struct Transition {
-  State from;
-  State to;
-  Symbol symbol;
-
-  bool operator==(const Transition& other) const
-  {
-    return other.from == from && other.to == to && other.symbol == symbol;
-  }
-};
-
 //transition functions
 template<typename State, typename Symbol> using Delta = std::map<std::pair<State, Symbol>, std::set<State>>;
-template<typename State, typename Symbol> using VecTrans = std::vector<Transition<State, Symbol>>;
 
+/**
+ * Class that holds the whole Buchi automaton
+ * @tparam State
+ * @tparam Symbol
+ */
 template<typename State, typename Symbol>
 class Automaton {
     public:
@@ -30,6 +22,7 @@ class Automaton {
 
         Automaton loadAutomaton(std::string filename);
 
+        //getters
         SetStates getStates() { return this->states; }
         SetStates getInitialStates() { return this->initialStates; }
         SetStates getAcceptingStates() { return this->acceptingStates; }
@@ -44,20 +37,33 @@ class Automaton {
         void addNewTransition(std::pair<State, Symbol> src, std::set<State> dst);
         void addNewRevTransition(std::pair<State, Symbol> src, std::set<State> dst);
     protected:
-        SetStates states;
-        SetStates initialStates;
-        SetStates acceptingStates;
-        SetSymbols alphabet;
-        Delta<State, Symbol> transitions;
-        Delta<State, Symbol> reversedTransitions;
+        SetStates states; // set of all states of BA
+        SetStates initialStates; // set of all initial states of BA
+        SetStates acceptingStates; // set of all accepting states of BA
+        SetSymbols alphabet; // set of all symbols of BA
+        Delta<State, Symbol> transitions; // map that holds all the transitions of BA
+        Delta<State, Symbol> reversedTransitions; // map that holds all the reversed transitions of BA
 };
 
-
+/**
+ * Adds a new transition
+ * @tparam State
+ * @tparam Symbol
+ * @param src
+ * @param dst
+ */
 template<typename State, typename Symbol>
 void Automaton<State, Symbol>::addNewTransition(std::pair<State, Symbol> src, std::set<State> dst){
     this->transitions.insert({src, dst});
 }
 
+/**
+ * Adds a new reversed transition
+ * @tparam State
+ * @tparam Symbol
+ * @param src
+ * @param dst
+ */
 template<typename State, typename Symbol>
 void Automaton<State, Symbol>::addNewRevTransition(std::pair<State, Symbol> src, std::set<State> dst){
     this->reversedTransitions.insert({src, dst});
