@@ -13,9 +13,9 @@ int main(int argc, char *argv[]) {
     Simulation<string, string> s;
     set<pair<string, string>> omega = s.directSimulationRelation(a);
 
-//    Delta<std::string, std::string> transitions = a.getTransitions();
-//    parityGame<string, string> pg;
-//    pg.constructFPG(a, transitions);
+    Delta<std::string, std::string> transitions = a.getTransitions();
+    parityGame<string, string> pg;
+    pg.constructFPG(a, transitions);
     
     return 0; 
 }
