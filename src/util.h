@@ -7,7 +7,7 @@
 #include<algorithm>
 #include<set>
 
-// functions
+// function templates
 void error_exit(const char *fmt, ...);
 std::vector<std::string> split(std::string original, std::string delimiter);
 
@@ -77,5 +77,4 @@ int card(std::map<std::pair<State, Symbol>, std::set<State>>& transition, State 
     return counter;
 }
 
-
-#endif
+#endif // UTIL_H

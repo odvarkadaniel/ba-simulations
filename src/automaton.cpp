@@ -119,11 +119,6 @@ Automaton<std::string, std::string> Automaton<std::string, std::string>::loadAut
 
     readFile.close();
 
-    // erase duplicates from states and alphabet
-    // eraseDuplicates(omega.alphabet);
-    // eraseDuplicates(omega.states);
-
-
     #ifdef _DEBUG
 
     cout << "initial states: ";

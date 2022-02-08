@@ -6,7 +6,7 @@
 #include<map>
 #include<set>
 
-//transition functions
+//transition function
 template<typename State, typename Symbol> using Delta = std::map<std::pair<State, Symbol>, std::set<State>>;
 
 /**
@@ -69,4 +69,4 @@ void Automaton<State, Symbol>::addNewRevTransition(std::pair<State, Symbol> src,
     this->reversedTransitions.insert({src, dst});
 }
 
-#endif
+#endif // AUTOMATON_H

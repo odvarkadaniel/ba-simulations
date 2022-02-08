@@ -1,7 +1,6 @@
 #ifndef PARITY_GAME_H
 #define PARITY_GAME_H
 
-#include"automaton.h"
 #include<iostream>
 #include<tuple>
 
@@ -83,6 +82,7 @@ int parityGame<State, Symbol>::getPriorityv1F(std::set<State> acceptingState, St
             }
         }
     }
+
     return 2;
 }
 
@@ -105,6 +105,7 @@ int parityGame<State, Symbol>::getPriorityv0F(std::set<State> acceptingState, St
             }
         }
     }
+
     return 2;
 }
 
@@ -135,7 +136,6 @@ void parityGame<State, Symbol>::constructv0F(Automaton<State, Symbol> a) {
         }
     }
 
-
     return;
 }
 
@@ -154,6 +154,7 @@ void parityGame<State, Symbol>::constructv1F(std::set<State> &states) {
             v1F.insert({make_tuple(x, y, -1)});
         }
     }
+
     return;
 }
 
@@ -224,4 +225,4 @@ void parityGame<State, Symbol>::constructFPG(Automaton<State, Symbol> omega, std
     return;
 }
 
-#endif
+#endif // PARITY_GAME_H

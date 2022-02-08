@@ -3,6 +3,7 @@
 
 #include<queue>
 #include"automaton.h"
+
 #include"util.h"
 
 /**
@@ -105,7 +106,7 @@ std::set<std::pair<State, State>> Simulation<State, Symbol>::directSimulationRel
         }
     }
 
-    cout << "\nDirect simulation relation: ";
+    cout << "\nComplement to direct simulation relation: ";
     for ( const auto& token : omega )
         cout << "(" << token.first << ", " << token.second << ")" << " ";
     cout << endl;
