@@ -79,11 +79,16 @@ Automaton<std::string, std::string> Automaton<std::string, std::string>::loadAut
     using namespace std;
 
     Automaton<string, string> omega;
-    fstream readFile(filename);
     string temp, s, s1, s2;
     int line = 1;
     string delimiterTransition = "->";
     string delimeterComma = ",";
+    
+    fstream readFile(filename);
+    if(readFile.fail()) {
+        cerr << "The file <" << filename << "> doesn't exist!\n";
+        exit(1);
+    }
 
     while(getline(readFile, temp)) {
 
