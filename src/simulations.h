@@ -17,7 +17,10 @@ class Simulation : public Automaton<State, Symbol> {
         // StateRelation useful for direct simulation
         typedef std::set<std::pair<State, State>> StateRelation;
 
-         StateRelation directSimulationRelation(Automaton<State, Symbol> &a);
+        // flag for dotfile output of the simulation
+        bool dotfile = false;
+
+        StateRelation directSimulationRelation(Automaton<State, Symbol> &a);
 
 };
 
@@ -67,10 +70,6 @@ std::set<std::pair<State, State>> Simulation<State, Symbol>::directSimulationRel
         }
     }
 
-    for(const auto& x : omega) {
-        cout << x.first << ", " << x.second << endl;
-    }
-
     while(!q.empty()) {
         auto m = q.front().first;
         auto n = q.front().second;
@@ -109,7 +108,10 @@ std::set<std::pair<State, State>> Simulation<State, Symbol>::directSimulationRel
     cout << "\nComplement to direct simulation relation: ";
     for ( const auto& token : omega )
         cout << "(" << token.first << ", " << token.second << ")" << " ";
-    cout << endl;
+    cout << endl << endl;
+
+    // TODO dotfile output
+    // Show which states simulate which 
 
     return omega;
 }

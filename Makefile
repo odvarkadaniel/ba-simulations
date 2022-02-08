@@ -1,5 +1,7 @@
+# -Wzero-as-null-pointer-constant
+
 CXX = g++
-CFLAGS = -std=c++17 -I. -Wzero-as-null-pointer-constant
+CFLAGS = -std=c++17 -O2 -I.
 
 all: main
 files = src/automaton.cpp src/util.cpp

@@ -5,6 +5,23 @@
 #include"util.h"
 
 /**
+ * @brief Prints usage of the program
+ * 
+ */
+void printHelp() {
+    using namespace std;
+
+    cout << "Usage example:\n";
+    cout << "./main --file=filename { fair | direct | delayed } [dotfile.out]\n";
+    cout << "./main --file=omega.ba --fair\n\n";
+    cout << "Commands:\n";
+    cout << "{ file / s } \t Set an input file ( supported formats are .BA, ...)\n";
+    cout << "{ fair | direct | delayed } \t Set a simulation you want to compute\n"; 
+    cout << "[ dot ] \t Outputs the automaton in a DOT format into file named omega.out\n";
+    cout << "[ help / h ] \t Prints help\n";
+}
+
+/**
  * Exits with appropriate message
  * @param fmt
  * @param ...

@@ -8,6 +8,7 @@
 #include<set>
 
 // function templates
+void printHelp();
 void error_exit(const char *fmt, ...);
 std::vector<std::string> split(std::string original, std::string delimiter);
 
