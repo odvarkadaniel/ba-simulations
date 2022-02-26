@@ -12,24 +12,24 @@
 template<typename State, typename Symbol>
 class parityGame : protected Automaton<State, Symbol> {
     public:
-        void constructv0F(Automaton<State, Symbol> a);
-        void constructv1F(std::set<State> &states);
+        void constructm_v0F(Automaton<State, Symbol> a);
+        void constructm_v1F(std::set<State> &states);
         void constructFPG(Automaton<State, Symbol> omega, std::map<std::pair<State, Symbol>, std::set<std::string>> &transitions);
-        int getPriorityv0F(std::set<State> acceptingState, State v0);
-        int getPriorityv1F(std::set<State> acceptingState, State v1f, State v1s);
+        int getPrioritym_v0F(std::set<State> acceptingState, State v0);
+        int getPrioritym_v1F(std::set<State> acceptingState, State m_v1F, State v1s);
         void constructEFA(std::map<std::pair<State, Symbol>, std::set<State>>& transitions);
 
-    protected:
-        std::set<std::tuple<State, State, Symbol, int>> v0F; // set with Player 0's states
-        std::set<std::tuple<State, State, int>> v1F; // set with Player 1's states
-        std::map<std::pair<State, Symbol>, std::set<State>> EFA0; // map with the transitions from P0 to P1
-        std::map<std::pair<State, Symbol>, std::set<State>> EFA1; // map with the transitions from P1 to P0
+    private:
+        std::set<std::tuple<State, State, Symbol, int>> m_v0F; // set with Player 0's states
+        std::set<std::tuple<State, State, int>> m_v1F; // set with Player 1's states
+        std::map<std::pair<State, Symbol>, std::set<State>> m_EFA0; // map with the transitions from P0 to P1
+        std::map<std::pair<State, Symbol>, std::set<State>> m_EFA1; // map with the transitions from P1 to P0
 
 };
 
 /**
- * Transition from v0F to v1F is stored in EFA0
- * Transition from v1F to v0F is stored in EFA1
+ * Transition from m_m_v0F to m_v1F is stored in m_EFA0
+ * Transition from m_v1F to m_v0F is stored in m_EFA1
  * @tparam State
  * @tparam Symbol
  * @param transitions
@@ -38,20 +38,20 @@ template<typename State, typename Symbol>
 void parityGame<State, Symbol>::constructEFA(std::map<std::pair<State, Symbol>, std::set<State>>& transitions) {
     using namespace std;
 
-    for(const auto& v0 : v0F) {
-        for(const auto& v1 : v1F) {
+    for(const auto& v0 : m_v0F) {
+        for(const auto& v1 : m_v1F) {
             for(const auto& [tr, val] : transitions) {
                 if(get<1>(v0) == tr.first && get<2>(v0) == tr.second && get<0>(v0) == get<0>(v1)) {
                     for(const auto& setval : val) {
                         if(get<1>(v1) == setval) {
-                            EFA0[make_pair(get<1>(v0), get<2>(v0))].insert(get<0>(v1));
+                            m_EFA0[make_pair(get<1>(v0), get<2>(v0))].insert(get<0>(v1));
                         }
                     }
                 }
                 if(get<0>(v1) == tr.first && get<2>(v0) == tr.second && get<1>(v1) == get<1>(v0)) {
                     for(const auto& setval : val) {
                         if(get<0>(v0) == setval) {
-                            EFA1[make_pair(get<0>(v1), get<2>(v0))].insert(get<0>(v0));
+                            m_EFA1[make_pair(get<0>(v1), get<2>(v0))].insert(get<0>(v0));
                         }
                     }
                 }
@@ -65,19 +65,19 @@ void parityGame<State, Symbol>::constructEFA(std::map<std::pair<State, Symbol>, 
  * @tparam State
  * @tparam Symbol
  * @param acceptingState
- * @param v1f
+ * @param m_v1F
  * @param v1s
  * @return
  */
 template<typename State, typename Symbol>
-int parityGame<State, Symbol>::getPriorityv1F(std::set<State> acceptingState, State v1f, State v1s) {
+int parityGame<State, Symbol>::getPrioritym_v1F(std::set<State> acceptingState, State m_v1First, State v1second) {
     using namespace std;
 
     for(const auto& accSt : acceptingState) {
-        for (const auto &v0: v0F) {
-            if (get<1>(v0) == v1s && get<1>(v0) == accSt) {
+        for (const auto &v0: m_v0F) {
+            if (get<1>(v0) == v1second && get<1>(v0) == accSt) {
                 return 0;
-            } else if(acceptingState.find(v1f) != acceptingState.end() && acceptingState.find(v1s) == acceptingState.end()) {
+            } else if(acceptingState.find(m_v1First) != acceptingState.end() && acceptingState.find(v1second) == acceptingState.end()) {
                 return 1;
             }
         }
@@ -95,11 +95,11 @@ int parityGame<State, Symbol>::getPriorityv1F(std::set<State> acceptingState, St
  * @return
  */
 template<typename State, typename Symbol>
-int parityGame<State, Symbol>::getPriorityv0F(std::set<State> acceptingState, State v0) {
+int parityGame<State, Symbol>::getPrioritym_v0F(std::set<State> acceptingState, State v0) {
     using namespace std;
 
     for(const auto& accSt : acceptingState) {
-        for (const auto &v1: v1F) {
+        for (const auto &v1: m_v1F) {
             if (get<1>(v1) == v0 && get<1>(v1) == accSt) {
                 return 0;
             }
@@ -116,19 +116,19 @@ int parityGame<State, Symbol>::getPriorityv0F(std::set<State> acceptingState, St
  * @param a
  */
 template <typename State, typename Symbol>
-void parityGame<State, Symbol>::constructv0F(Automaton<State, Symbol> a) {
+void parityGame<State, Symbol>::constructm_v0F(Automaton<State, Symbol> a) {
     using namespace std;
     auto transition = a.getTransitions();
     auto states = a.getStates();
     auto alphabet = a.getAlphabet();
 
     for(const auto& st : states) {
-        for(const auto& v1 : v1F) {
+        for(const auto& v1 : m_v1F) {
             for(const auto& a : alphabet) {
                 for(const auto& [p, val] : transition) {
                     for(const auto& setval : val) {
                         if((st == p.first && a == p.second && get<0>(v1) == setval)) {
-                            v0F.insert(make_tuple(get<0>(v1), get<1>(v1), a, -1));
+                            m_v0F.insert(make_tuple(get<0>(v1), get<1>(v1), a, -1));
                         }
                     }
                 }
@@ -146,12 +146,12 @@ void parityGame<State, Symbol>::constructv0F(Automaton<State, Symbol> a) {
  * @param states
  */
 template <typename State, typename Symbol>
-void parityGame<State, Symbol>::constructv1F(std::set<State> &states) {
+void parityGame<State, Symbol>::constructm_v1F(std::set<State> &states) {
     using namespace std;
 
     for(auto &x : states) {
         for(auto &y : states) {
-            v1F.insert({make_tuple(x, y, -1)});
+            m_v1F.insert({make_tuple(x, y, -1)});
         }
     }
 
@@ -171,51 +171,51 @@ template <typename State, typename Symbol>
 void parityGame<State, Symbol>::constructFPG(Automaton<State, Symbol> omega, std::map<std::pair<State, Symbol>, std::set<std::string>> &transitions) {
     using namespace std;
 
-    // construct V1F accordingly
+    // construct m_v1F accordingly
     set<State> states = omega.getStates();
     set<State> acceptingStates = omega.getAcceptingStates();
 
-    constructv1F(states);
+    constructm_v1F(states);
 
-    // construct V0F
-    constructv0F(omega);
+    // construct m_v0F
+    constructm_v0F(omega);
 
-    for(const auto& v0 : v0F) {
-        int p = getPriorityv0F(acceptingStates, get<1>(v0));
-        v0F.erase(make_tuple(get<0>(v0), get<1>(v0), get<2>(v0), -1));
-        v0F.insert(make_tuple(get<0>(v0), get<1>(v0), get<2>(v0), p));
+    for(const auto& v0 : m_v0F) {
+        int p = getPrioritym_v0F(acceptingStates, get<1>(v0));
+        m_v0F.erase(make_tuple(get<0>(v0), get<1>(v0), get<2>(v0), -1));
+        m_v0F.insert(make_tuple(get<0>(v0), get<1>(v0), get<2>(v0), p));
     }
 
-    for(const auto& v1 : v1F) {
-        int p = getPriorityv1F(acceptingStates, get<0>(v1), get<1>(v1));
-        v1F.erase(make_tuple(get<0>(v1), get<1>(v1), -1));
-        v1F.insert(make_tuple(get<0>(v1), get<1>(v1), p));
+    for(const auto& v1 : m_v1F) {
+        int p = getPrioritym_v1F(acceptingStates, get<0>(v1), get<1>(v1));
+        m_v1F.erase(make_tuple(get<0>(v1), get<1>(v1), -1));
+        m_v1F.insert(make_tuple(get<0>(v1), get<1>(v1), p));
     }
 
     constructEFA(transitions);
 
     #ifdef _DEBUG
-    cout << "v0F: \n";
-    for (const auto& x : v0F) {
+    cout << "m_v0F: \n";
+    for (const auto& x : m_v0F) {
         cout << get<0>(x) << ' ' << get<1>(x) << ' ' << get<2>(x) << ' ' << get<3>(x) << '\n';
     }
 
     cout << endl;
 
-    cout << "v1F: \n";
-    for(const auto &x : v1F) {
+    cout << "m_v1F: \n";
+    for(const auto &x : m_v1F) {
         cout << get<0>(x) << ' ' << get<1>(x) << ' ' << get<2>(x) << '\n';
     }
 
-    cout << "EFA0: \n";
-    for(const auto& elem : EFA0) {
+    cout << "m_EFA0: \n";
+    for(const auto& elem : m_EFA0) {
         for(const auto& e : elem.second) {
             std::cout << elem.first.first << " " << elem.first.second << " " << e << endl;
         }
     }
 
-    cout << "EFA1: \n";
-    for(const auto& elem : EFA1) {
+    cout << "m_EFA1: \n";
+    for(const auto& elem : m_EFA1) {
         for(const auto& e : elem.second) {
             std::cout << elem.first.first << " " << elem.first.second << " " << e << endl;
         }
