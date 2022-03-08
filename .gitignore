@@ -1,6 +1,4 @@
 .vscode
 *.o
 main
-*.ba
-.idea
-
+test-all
