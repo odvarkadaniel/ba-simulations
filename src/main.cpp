@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
             {"direct", no_argument, 0, 'd'},
             {"fair", no_argument, 0, 'f'},
             {"delayed", no_argument, 0, 'z'},
-            {"dot", no_argument, 0, 1}, // TODO1
+            {"dot", no_argument, 0, 1}, // TODO
             {"help", no_argument, 0, 'h'},
         };
 
