@@ -15,6 +15,9 @@ debug: src/main.cpp src/automaton.cpp src/simulations.h src/util.cpp src/util.h 
 debug2: src/main.cpp src/automaton.cpp src/simulations.h src/util.cpp src/util.h src/automaton.h src/parity_game.h
 	$(CXX) src/main.cpp -g $(CFLAGS) -o main $(files) -D_DEBUG
 
+test: src/automaton.cpp src/simulations.h src/util.cpp src/util.h src/automaton.h src/parity_game.h
+	$(CXX) tests/tests.cpp $(CFLAGS) -o test_all $(files) -lgtest -lpthread
+
 run:
 	make build
 	./main
@@ -24,4 +27,4 @@ rund:
 	./main
 
 clean:
-	rm -f *.o main
+	rm -f *.o main test_all
