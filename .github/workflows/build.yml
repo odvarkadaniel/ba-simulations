@@ -16,5 +16,5 @@ jobs:
       - name: Build the program
         uses: |
           echo $PWD
-          cd ../..
+          cd ${{ github.workspace }}
           make
