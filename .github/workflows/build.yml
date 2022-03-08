@@ -1,4 +1,4 @@
-name: CI
+name: C/C++ CI
 
 on:
   push:
@@ -11,10 +11,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Build the program
-        uses: |
-          echo $PWD
-          cd ${{ github.workspace }}
-          make
+    - uses: actions/checkout@v2
+    - name: Build the program
+      run: |
+        echo $PWD
+        cd ${{ github.workspace }}
+        make
