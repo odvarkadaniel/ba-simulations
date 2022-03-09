@@ -30,8 +30,10 @@ class Automaton {
         Delta<State, Symbol> getTransitions() { return this->transitions; }
         Delta<State, Symbol> getReversedTransitions() { return this->reversedTransitions; }
 
-        void addToAlphabet(std::string str, std::set<std::string>& alphabetVector);
-        void addState(std::string str, std::set<std::string>& stateVector);
+        void addToAlphabet(Symbol str);
+        void addState(State str);
+        void addInitialState(State str);
+        void addAcceptingState(State str);
         std::string getStateForTransition(std::string str);
         bool isInTransition(std::string t1, std::string alpha);
         void addNewTransition(std::pair<State, Symbol> src, std::set<State> dst);
