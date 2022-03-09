@@ -19,5 +19,4 @@ jobs:
         make test
         ./test_all
     - name: Build the program
-    - run: |
-        make build
+      run: make build
