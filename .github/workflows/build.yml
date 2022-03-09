@@ -11,8 +11,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Install gtest manually
+      run: sudo apt-get install libgtest-dev && cd /usr/src/gtest && sudo cmake CMakeLists.txt && sudo make && sudo cp ./lib/libgtest*.a /usr/lib
     - uses: actions/checkout@v2
-    - name: Build the program
+    - name: Run the tests
       run: |
-        echo $PWD
-        make build
+        make test
+        ./test_all
+    - name: Build the program
+      run: make build
