@@ -2,7 +2,8 @@
 #include<getopt.h>
 
 #include"simulations.h"
-#include"parity_game.h"
+#include"fair_parity_game.h"
+#include"parity_game_solver.h"
 
 int main(int argc, char *argv[]) {
     using namespace std;
@@ -59,8 +60,10 @@ int main(int argc, char *argv[]) {
         set<pair<string, string>> omega = s.directSimulationRelation(a);
     } else if(fair) {
         Delta<std::string, std::string> transitions = a.getTransitions();
-        parityGame<string, string> pg;
-        pg.constructFPG(a, transitions);
+        fairParityGame<string, string> fpg;
+        fpg.constructFPG(a, transitions);
+        parityGameSolver<fairParityGame<string, string>, string, string> pgsolver;
+        pgsolver.solveParityGame(fpg);
     } else if(delayed) {
         cerr << "Delayed simulation not implement yet\n";
     } else {
