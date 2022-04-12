@@ -38,6 +38,7 @@ class Automaton {
         bool isInTransition(std::string t1, std::string alpha);
         void addNewTransition(std::pair<State, Symbol> src, std::set<State> dst);
         void addNewRevTransition(std::pair<State, Symbol> src, std::set<State> dst);
+        bool isTransition(State s1, Symbol a, State s2, Delta<State, Symbol> &transitions);
     protected:
         SetStates states; // set of all states of BA
         SetStates initialStates; // set of all initial states of BA
@@ -69,6 +70,18 @@ void Automaton<State, Symbol>::addNewTransition(std::pair<State, Symbol> src, st
 template<typename State, typename Symbol>
 void Automaton<State, Symbol>::addNewRevTransition(std::pair<State, Symbol> src, std::set<State> dst){
     this->reversedTransitions.insert({src, dst});
+}
+
+template<typename State, typename Symbol>
+bool Automaton<State, Symbol>::isTransition(State s1, Symbol a, State s2, Delta<State, Symbol> &transitions) {
+    for(const auto &[first, second] : transitions) {
+        for(const auto &stateTo : second) {
+            if(first.first == s1 && first.second == a && stateTo == s2) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 #endif // AUTOMATON_H

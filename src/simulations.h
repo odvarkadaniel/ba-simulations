@@ -2,9 +2,10 @@
 #define SIMULATIONS_H
 
 #include<queue>
-#include"automaton.h"
 
+#include"automaton.h"
 #include"util.h"
+
 
 /**
  * Class that holds stuff for simulations

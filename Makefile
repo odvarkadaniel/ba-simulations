@@ -1,21 +1,23 @@
 # -Wzero-as-null-pointer-constant
 
 CXX = g++
-CFLAGS = -std=c++17 -O2 -I.
+CFLAGS = -std=c++17 -I.
 
-all: main
 files = src/automaton.cpp src/util.cpp
 
-build: src/main.cpp src/automaton.cpp src/simulations.h src/util.cpp src/util.h src/automaton.h src/parity_game.h
+all: src/main.cpp src/automaton.cpp src/simulations.h src/util.cpp src/util.h src/automaton.h src/fair_parity_game.h
+	$(CXX) src/main.cpp -g $(CFLAGS) -o main $(files) -D_DEBUG
+
+build: src/main.cpp src/automaton.cpp src/simulations.h src/util.cpp src/util.h src/automaton.h src/fair_parity_game.h
 	$(CXX) src/main.cpp $(CFLAGS) -o main $(files)
 
-debug: src/main.cpp src/automaton.cpp src/simulations.h src/util.cpp src/util.h src/automaton.h src/parity_game.h
+debug: src/main.cpp src/automaton.cpp src/simulations.h src/util.cpp src/util.h src/automaton.h src/fair_parity_game.h
 	$(CXX) src/main.cpp -g $(CFLAGS) -o main $(files) -D_DEBUG
 
-debug2: src/main.cpp src/automaton.cpp src/simulations.h src/util.cpp src/util.h src/automaton.h src/parity_game.h
+debug2: src/main.cpp src/automaton.cpp src/simulations.h src/util.cpp src/util.h src/automaton.h src/fair_parity_game.h
 	$(CXX) src/main.cpp -g $(CFLAGS) -o main $(files) -D_DEBUG
 
-test: src/automaton.cpp src/simulations.h src/util.cpp src/util.h src/automaton.h src/parity_game.h
+test: src/automaton.cpp src/simulations.h src/util.cpp src/util.h src/automaton.h src/fair_parity_game.h
 	$(CXX) tests/tests.cpp $(CFLAGS) -o test_all $(files) -lgtest -lpthread
 
 run:
