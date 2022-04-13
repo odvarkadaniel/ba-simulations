@@ -5,6 +5,15 @@
 #include"automaton.h"
 #include"util.h"
 
+template<>
+bool Automaton<std::string, std::string>::isAcceptingState(std::string s1) {
+    auto accSt = this->getAcceptingStates();
+    for(const auto &acc : accSt) {
+        if(s1 == acc) return true;
+    }
+    return false;
+}
+
 /**
  * Checks whether such transition exists - used for direct simulation calculation
  * @param transition

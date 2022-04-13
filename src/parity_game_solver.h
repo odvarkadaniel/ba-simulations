@@ -8,7 +8,7 @@
 template<typename State, typename Symbol> using Vertex0 = std::set<std::tuple<State, State, Symbol, int, int>>;
 template<typename State> using Vertex1 = std::set<std::tuple<State, State, int, int>>;
 
-template<typename Game, typename State, typename Symbol>
+template<class Game, typename State, typename Symbol>
 class parityGameSolver : public fairParityGame<State, Symbol> {
     public:
         void solveParityGame(Game pg);
@@ -32,7 +32,7 @@ void parityGameSolver<Game, State, Symbol>::solveParityGame(Game pg) {
 
     const uint n1 = n_1(v0F, v1F);
     if(!n1) {
-        std::cout << "There is no vertex with priority 0\n";
+        std::cout << "There is no vertex with priority 1\n";
     }
     //std::cout << n1 << std::endl;
 

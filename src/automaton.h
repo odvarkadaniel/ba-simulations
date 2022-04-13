@@ -39,6 +39,7 @@ class Automaton {
         void addNewTransition(std::pair<State, Symbol> src, std::set<State> dst);
         void addNewRevTransition(std::pair<State, Symbol> src, std::set<State> dst);
         bool isTransition(State s1, Symbol a, State s2, Delta<State, Symbol> &transitions);
+        bool isAcceptingState(State s1);
     protected:
         SetStates states; // set of all states of BA
         SetStates initialStates; // set of all initial states of BA

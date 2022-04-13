@@ -4,6 +4,8 @@
 #include"simulations.h"
 #include"fair_parity_game.h"
 #include"parity_game_solver.h"
+#include"delayed_parity_game.h"
+#include"parity_game_solver_new.h"
 
 int main(int argc, char *argv[]) {
     using namespace std;
@@ -65,7 +67,10 @@ int main(int argc, char *argv[]) {
         parityGameSolver<fairParityGame<string, string>, string, string> pgsolver;
         pgsolver.solveParityGame(fpg);
     } else if(delayed) {
-        cerr << "Delayed simulation not implement yet\n";
+        delayedParityGame<string, string> dpg;
+        dpg.constructDPG(a);
+        pgSolver<delayedParityGame<string, string>, string, string> pgsolver;
+        pgsolver.solvePG(dpg, a);
     } else {
         cerr << "No simulation to compute selected\n\n";
         printHelp();
