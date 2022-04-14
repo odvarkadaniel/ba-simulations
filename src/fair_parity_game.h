@@ -25,7 +25,7 @@ class fairParityGame : protected Automaton<State, Symbol> {
         void constructEFA(std::map<std::pair<State, Symbol>, std::set<State>>& transitions);
 
         std::set<std::tuple<State, State, int, int>> succ0(std::tuple<State, State, Symbol, int, int> &v0, std::map<std::tuple<State, State, Symbol, int, int>, std::set<std::tuple<State, State, int, int>>> &EFA0);
-        std::set<std::tuple<State, State, Symbol, int, int>> succ1(std::tuple<State, State, int, int> &v0, std::map<std::tuple<State, State, int, int>, std::set<std::tuple<State, State, Symbol, int, int>>> &EFA1);
+        std::set<std::tuple<State, State, Symbol, int, int>> succ1(std::tuple<State, State, int, int> &v1, std::map<std::tuple<State, State, int, int>, std::set<std::tuple<State, State, Symbol, int, int>>> &EFA1);
 
     private:
         std::set<std::tuple<State, State, Symbol, int, int>> m_v0F; // set with Player 0's states

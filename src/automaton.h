@@ -40,7 +40,8 @@ class Automaton {
         void addNewRevTransition(std::pair<State, Symbol> src, std::set<State> dst);
         bool isTransition(State s1, Symbol a, State s2, Delta<State, Symbol> &transitions);
         bool isAcceptingState(State s1);
-    protected:
+        bool existsTransition(State to, Symbol a);
+protected:
         SetStates states; // set of all states of BA
         SetStates initialStates; // set of all initial states of BA
         SetStates acceptingStates; // set of all accepting states of BA
@@ -80,6 +81,16 @@ bool Automaton<State, Symbol>::isTransition(State s1, Symbol a, State s2, Delta<
             if(first.first == s1 && first.second == a && stateTo == s2) {
                 return true;
             }
+        }
+    }
+    return false;
+}
+
+template<typename State, typename Symbol>
+bool Automaton<State, Symbol>::existsTransition(State to, Symbol a) {
+    for(const auto &[first, second] : transitions) {
+        for(const auto &_to : second) {
+            if(first.second == a && _to == to) return true;
         }
     }
     return false;

@@ -3,16 +3,16 @@
 
 #include"simulations.h"
 #include"fair_parity_game.h"
-#include"parity_game_solver.h"
+#include"fair_parity_game_solver.h"
 #include"delayed_parity_game.h"
-#include"parity_game_solver_new.h"
+#include"delayed_parity_game_solver.h"
 
 int main(int argc, char *argv[]) {
     using namespace std;
 
     Automaton<string, string> a;
 
-    bool direct = false, fair = false, delayed = false, dot = false;
+    bool direct = false, fair = false, delayed = false, dot = false, print = false;
 
     int c;
     while(1) {
@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
             {"delayed", no_argument, 0, 'z'},
             {"dot", no_argument, 0, 1}, // TODO
             {"help", no_argument, 0, 'h'},
+            {"print", no_argument, 0, 'p'},
         };
 
         c = getopt_long(argc, argv, "s:fdzh", long_options, &optionIndex);
@@ -49,6 +50,9 @@ int main(int argc, char *argv[]) {
             case 'h':
                 printHelp();
                 break;
+            case 'p':
+                print = true;
+                break;
             case '?':
                 printHelp();
                 break;
@@ -65,12 +69,17 @@ int main(int argc, char *argv[]) {
         fairParityGame<string, string> fpg;
         fpg.constructFPG(a, transitions);
         parityGameSolver<fairParityGame<string, string>, string, string> pgsolver;
-        pgsolver.solveParityGame(fpg);
+        pgsolver.solveParityGame(fpg, a);
     } else if(delayed) {
         delayedParityGame<string, string> dpg;
         dpg.constructDPG(a);
-        pgSolver<delayedParityGame<string, string>, string, string> pgsolver;
-        pgsolver.solvePG(dpg, a);
+        delayedParityGameSolver<delayedParityGame<string, string>, string, string> pgsolver;
+        auto result = pgsolver.solveParityGame(dpg, a);
+        if(print) {
+            for(const auto &pairDPG : result) {
+                std::cout << "(" << pairDPG.first << ", " << pairDPG.second << ")\n";
+            }
+        }
     } else {
         cerr << "No simulation to compute selected\n\n";
         printHelp();
