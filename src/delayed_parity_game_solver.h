@@ -45,9 +45,9 @@ template<class Game, typename State, typename Symbol>
 class delayedParityGameSolver : public delayedParityGame<State, Symbol> {
 public:
     std::set<std::pair<State, State>> solveParityGame(Game pg, Automaton<State, Symbol> &omega);
-    int updateD0(std::tuple<bool, State, State, Symbol, int, int> v0, Game pg, const uint n1, std::map<std::tuple<bool, State, State, int, int>, std::set<std::tuple<bool, State, State, Symbol, int, int>>> &EFA1, std::map<std::tuple<bool, State, State, Symbol, int, int>, std::set<std::tuple<bool, State, State, int, int>>> &EFA0);
-    int updateD1(std::tuple<bool, State, State, int, int> v1, Game pg, const uint n1, std::map<std::tuple<bool, State, State, Symbol, int, int>, std::set<std::tuple<bool, State, State, int, int>>> &EFA0, std::map<std::tuple<bool, State, State, int, int>, std::set<std::tuple<bool, State, State, Symbol, int, int>>> &EFA1);
-    const uint n_1(dVertex0<State, Symbol> &v0F, dVertex1<State> &v1F);
+    int updateD0(std::tuple<bool, State, State, Symbol, int, int> v0, Game pg, uint n1, std::map<std::tuple<bool, State, State, int, int>, std::set<std::tuple<bool, State, State, Symbol, int, int>>> &EDA1, std::map<std::tuple<bool, State, State, Symbol, int, int>, std::set<std::tuple<bool, State, State, int, int>>> &EDA0);
+    int updateD1(std::tuple<bool, State, State, int, int> v1, Game pg, uint n1, std::map<std::tuple<bool, State, State, Symbol, int, int>, std::set<std::tuple<bool, State, State, int, int>>> &EDA0, std::map<std::tuple<bool, State, State, int, int>, std::set<std::tuple<bool, State, State, Symbol, int, int>>> &EDA1);
+    uint n_1(dVertex0<State, Symbol> &v0F, dVertex1<State> &v1F);
 };
 
 template<typename Game, typename State, typename Symbol>
@@ -205,7 +205,7 @@ int delayedParityGameSolver<Game, State, Symbol>::updateD0(std::tuple<bool, Stat
 }
 
 template<typename Game, typename State, typename Symbol>
-const uint delayedParityGameSolver<Game, State, Symbol>::n_1(dVertex0<State, Symbol> &v0F, dVertex1<State> &v1F) {
+uint delayedParityGameSolver<Game, State, Symbol>::n_1(dVertex0<State, Symbol> &v0F, dVertex1<State> &v1F) {
     uint counter = 0;
 
     for(const auto &x : v0F) {
