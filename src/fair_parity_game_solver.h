@@ -3,6 +3,36 @@
 
 #include"fair_parity_game.h"
 
+#define UPDATE_DFA1(x) \
+do {                   \
+    for(auto &itr : EFA1) { \
+        for(auto &sec : itr.second) { \
+            if(std::get<0>(sec) == std::get<0>(v0) && \
+                std::get<1>(sec) == std::get<1>(v0) && \
+                std::get<2>(sec) == std::get<2>(v0) && \
+                std::get<3>(sec) == std::get<3>(v0)) { \
+                    EFA1[itr.first].erase(make_tuple(get<0>(v0), get<1>(v0), get<2>(v0), get<3>(v0), get<4>(v0))); \
+                    EFA1[itr.first].insert(make_tuple(get<0>(v0), get<1>(v0), get<2>(v0), get<3>(v0), x)); \
+            } \
+        } \
+    }                       \
+} while(0)
+
+
+#define UPDATE_DFA0(x) \
+do {                 \
+    for(auto &itr : EFA0) { \
+        for(auto &sec : itr.second) { \
+            if(std::get<0>(sec) == std::get<0>(v1) && \
+                std::get<1>(sec) == std::get<1>(v1) && \
+                std::get<2>(sec) == std::get<2>(v1)) { \
+                    EFA0[itr.first].erase(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), get<3>(v1))); \
+                    EFA0[itr.first].insert(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), x)); \
+            } \
+        } \
+    } \
+} while(0)
+
 #define INF 10
 
 template<typename State, typename Symbol> using Vertex0 = std::set<std::tuple<State, State, Symbol, int, int>>;
@@ -14,7 +44,7 @@ class parityGameSolver : public fairParityGame<State, Symbol> {
         void solveParityGame(Game pg, Automaton<State, Symbol> &omega);
         int update0(std::tuple<State, State, Symbol, int, int> v0, Game pg, uint n1, std::map<std::tuple<State, State, int, int>, std::set<std::tuple<State, State, Symbol, int, int>>> &EFA1, std::map<std::tuple<State, State, Symbol, int, int>, std::set<std::tuple<State, State, int, int>>> &EFA0);
         int update1(std::tuple<State, State, int, int> v1, Game pg, uint n1, std::map<std::tuple<State, State, Symbol, int, int>, std::set<std::tuple<State, State, int, int>>> &EFA0, std::map<std::tuple<State, State, int, int>, std::set<std::tuple<State, State, Symbol, int, int>>> &EFA1);
-        const uint n_1(Vertex0<State, Symbol> &v0F, Vertex1<State> &v1F);
+        uint n_1(Vertex0<State, Symbol> &v0F, Vertex1<State> &v1F);
 };
 
 template<typename Game, typename State, typename Symbol>
@@ -77,7 +107,6 @@ void parityGameSolver<Game, State, Symbol>::solveParityGame(Game pg, Automaton<S
         if(std::get<3>(res) < INF)
             std::cout << "(" << std::get<0>(res) << ", " << std::get<1>(res) << ")\n";
     }
-    return;
 }
 
 template<typename Game, typename State, typename Symbol>
@@ -91,17 +120,7 @@ int parityGameSolver<Game, State, Symbol>::update1(std::tuple<State, State, int,
     if(std::get<2>(v1) == 0) {
         auto successors = pg.succ1(v1, EFA1);
         if(successors.size() == 0) {
-            for(auto &itr : EFA0) {
-                for(auto &sec : itr.second) {
-                    if(std::get<0>(sec) == std::get<0>(v1) &&
-                       std::get<1>(sec) == std::get<1>(v1) &&
-                       std::get<2>(sec) == std::get<2>(v1)) {
-                        EFA0[itr.first].erase(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), get<3>(v1)));
-                        EFA0[itr.first].insert(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), INF));
-                    }
-                }
-            }
-
+            UPDATE_DFA0(INF);
             return INF;
         }
 
@@ -112,48 +131,19 @@ int parityGameSolver<Game, State, Symbol>::update1(std::tuple<State, State, int,
         auto maxRho = *max_element(begin(rhos), end(rhos));
 
         if(maxRho == INF) {
-            for(auto &itr : EFA0) {
-                for(auto &sec : itr.second) {
-                    if(std::get<0>(sec) == std::get<0>(v1) &&
-                       std::get<1>(sec) == std::get<1>(v1) &&
-                       std::get<2>(sec) == std::get<2>(v1)) {
-                        EFA0[itr.first].erase(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), get<3>(v1)));
-                        EFA0[itr.first].insert(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), INF));
-                    }
-                }
-            }
-
+            UPDATE_DFA0(INF);
             return INF;
         }
 
         if(std::get<3>(v1) != maxRho) {
-            for (auto &itr: EFA0) {
-                for (auto &sec: itr.second) {
-                    if (std::get<0>(sec) == std::get<0>(v1) &&
-                        std::get<1>(sec) == std::get<1>(v1) &&
-                        std::get<2>(sec) == std::get<2>(v1)) {
-                        EFA0[itr.first].erase(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), get<3>(v1)));
-                        EFA0[itr.first].insert(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), 0));
-                    }
-                }
-            }
+            UPDATE_DFA0(0);
         }
 
         return 0;
     } else if(std::get<2>(v1) == 2) {
         auto successors = pg.succ1(v1, EFA1);
         if(successors.size() == 0) {
-            for(auto &itr : EFA0) {
-                for(auto &sec : itr.second) {
-                    if(std::get<0>(sec) == std::get<0>(v1) &&
-                       std::get<1>(sec) == std::get<1>(v1) &&
-                       std::get<2>(sec) == std::get<2>(v1)) {
-                        EFA0[itr.first].erase(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), get<3>(v1)));
-                        EFA0[itr.first].insert(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), INF));
-                    }
-                }
-            }
-
+            UPDATE_DFA0(INF);
             return INF;
         }
 
@@ -164,31 +154,13 @@ int parityGameSolver<Game, State, Symbol>::update1(std::tuple<State, State, int,
         auto maxRho = *min_element(begin(rhos), end(rhos));
 
         for(auto &itr : EFA0) {
-            for(auto &sec : itr.second) {
-                if(std::get<0>(sec) == std::get<0>(v1) &&
-                   std::get<1>(sec) == std::get<1>(v1) &&
-                   std::get<2>(sec) == std::get<2>(v1)) {
-                    EFA0[itr.first].erase(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), get<3>(v1)));
-                    EFA0[itr.first].insert(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), maxRho));
-                }
-            }
+            UPDATE_DFA0(maxRho);
         }
-
         return maxRho;
     } else { // p(v) is 1
         auto successors = pg.succ1(v1, EFA1);
         if(successors.size() == 0) {
-            for(auto &itr : EFA0) {
-                for(auto &sec : itr.second) {
-                    if(std::get<0>(sec) == std::get<0>(v1) &&
-                       std::get<1>(sec) == std::get<1>(v1) &&
-                       std::get<2>(sec) == std::get<2>(v1)) {
-                        EFA0[itr.first].erase(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), get<3>(v1)));
-                        EFA0[itr.first].insert(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), INF));
-                    }
-                }
-            }
-
+            UPDATE_DFA0(INF);
             return INF;
         }
 
@@ -199,31 +171,12 @@ int parityGameSolver<Game, State, Symbol>::update1(std::tuple<State, State, int,
         auto maxRho = *max_element(begin(rhos), end(rhos));
 
         if(maxRho == INF || maxRho + 1 > n1) {
-            for(auto &itr : EFA0) {
-                for(auto &sec : itr.second) {
-                    if(std::get<0>(sec) == std::get<0>(v1) &&
-                       std::get<1>(sec) == std::get<1>(v1) &&
-                       std::get<2>(sec) == std::get<2>(v1)) {
-                        EFA0[itr.first].erase(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), get<3>(v1)));
-                        EFA0[itr.first].insert(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), INF));
-                    }
-                }
-            }
-
+            UPDATE_DFA0(INF);
             return INF;
         }
 
         if(std::get<3>(v1) != (maxRho + 1)) {
-            for(auto &itr : EFA0) {
-                for(auto &sec : itr.second) {
-                    if(std::get<0>(sec) == std::get<0>(v1) &&
-                       std::get<1>(sec) == std::get<1>(v1) &&
-                       std::get<2>(sec) == std::get<2>(v1)) {
-                        EFA0[itr.first].erase(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), get<3>(v1)));
-                        EFA0[itr.first].insert(make_tuple(get<0>(v1), get<1>(v1), get<2>(v1), (maxRho + 1)));
-                    }
-                }
-            }
+            UPDATE_DFA0((maxRho + 1));
         }
 
         return (maxRho + 1);
@@ -239,18 +192,7 @@ int parityGameSolver<Game, State, Symbol>::update0(std::tuple<State, State, Symb
     if(std::get<3>(v0) == 0) {
         auto successors = pg.succ0(v0, EFA0);
         if(successors.size() == 0) {
-            for(auto &itr : EFA1) {
-                for(auto &sec : itr.second) {
-                    if(std::get<0>(sec) == std::get<0>(v0) &&
-                       std::get<1>(sec) == std::get<1>(v0) &&
-                       std::get<2>(sec) == std::get<2>(v0) &&
-                       std::get<3>(sec) == std::get<3>(v0)) {
-                        EFA1[itr.first].erase(make_tuple(get<0>(v0), get<1>(v0), get<2>(v0), get<3>(v0), get<4>(v0)));
-                        EFA1[itr.first].insert(make_tuple(get<0>(v0), get<1>(v0), get<2>(v0), get<3>(v0), INF));
-                    }
-                }
-            }
-
+            UPDATE_DFA1(INF);
             return INF;
         }
 
@@ -258,40 +200,18 @@ int parityGameSolver<Game, State, Symbol>::update0(std::tuple<State, State, Symb
         for(auto &succ : successors) {
             rhos.push_back(get<3>(succ));
         }
-        auto maxRho = *min_element(begin(rhos), end(rhos));
+        auto minRho = *min_element(begin(rhos), end(rhos));
 
-        if(maxRho == INF) {
-            for(auto &itr : EFA1) {
-                for(auto &sec : itr.second) {
-                    if(std::get<0>(sec) == std::get<0>(v0) &&
-                       std::get<1>(sec) == std::get<1>(v0) &&
-                       std::get<2>(sec) == std::get<2>(v0) &&
-                       std::get<3>(sec) == std::get<3>(v0)) {
-                        EFA1[itr.first].erase(make_tuple(get<0>(v0), get<1>(v0), get<2>(v0), get<3>(v0), get<4>(v0)));
-                        EFA1[itr.first].insert(make_tuple(get<0>(v0), get<1>(v0), get<2>(v0), get<3>(v0), INF));
-                    }
-                }
-            }
-
+        if(minRho == INF) {
+            UPDATE_DFA1(INF);
             return INF;
         }
 
         return 0;
-    } else if(std::get<3>(v0) == 2) {
+    } else { // p(v) == 2
         auto successors = pg.succ0(v0, EFA0);
         if(successors.size() == 0) {
-            for(auto &itr : EFA1) {
-                for(auto &sec : itr.second) {
-                    if(std::get<0>(sec) == std::get<0>(v0) &&
-                       std::get<1>(sec) == std::get<1>(v0) &&
-                       std::get<2>(sec) == std::get<2>(v0) &&
-                       std::get<3>(sec) == std::get<3>(v0)) {
-                        EFA1[itr.first].erase(make_tuple(get<0>(v0), get<1>(v0), get<2>(v0), get<3>(v0), get<4>(v0)));
-                        EFA1[itr.first].insert(make_tuple(get<0>(v0), get<1>(v0), get<2>(v0), get<3>(v0), INF));
-                    }
-                }
-            }
-
+            UPDATE_DFA1(INF);
             return INF;
         }
 
@@ -299,46 +219,16 @@ int parityGameSolver<Game, State, Symbol>::update0(std::tuple<State, State, Symb
         for(auto &succ : successors) {
             rhos.push_back(get<3>(succ));
         }
-        auto maxRho = *min_element(begin(rhos), end(rhos));
+        auto minRho = *min_element(begin(rhos), end(rhos));
 
-        for(auto &itr : EFA1) {
-            for(auto &sec : itr.second) {
-                if(std::get<0>(sec) == std::get<0>(v0) &&
-                   std::get<1>(sec) == std::get<1>(v0) &&
-                   std::get<2>(sec) == std::get<2>(v0) &&
-                   std::get<3>(sec) == std::get<3>(v0)) {
-                    EFA1[itr.first].erase(make_tuple(get<0>(v0), get<1>(v0), get<2>(v0), get<3>(v0), get<3>(v0)));
-                    EFA1[itr.first].insert(make_tuple(get<0>(v0), get<1>(v0), get<2>(v0), get<3>(v0), maxRho));
-                }
-            }
-        }
+        UPDATE_DFA1(minRho);
 
-        return maxRho;
-    } else {
-        auto successors = pg.succ0(v0, EFA0);
-
-        // update pred(v) whenever rho(v) would get changed
-
-
-        if(successors.size() == 0) {
-            return INF;
-        }
-
-        std::vector<int> rhos;
-        for(auto &succ : successors) {
-            //cout << "(" << get<0>(succ) << ", " << get<1>(succ) << ", " << get<2>(succ) << ", " << get<3>(succ) << ")\n";
-            rhos.push_back(get<3>(succ));
-        }
-        auto maxRho = *min_element(begin(rhos), end(rhos));
-
-        if(maxRho == INF || maxRho + 1 > n1) return INF;
-
-        return (maxRho + 1);
+        return minRho;
     }
 }
 
 template<typename Game, typename State, typename Symbol>
-const uint parityGameSolver<Game, State, Symbol>::n_1(Vertex0<State, Symbol> &v0F, Vertex1<State> &v1F) {
+uint parityGameSolver<Game, State, Symbol>::n_1(Vertex0<State, Symbol> &v0F, Vertex1<State> &v1F) {
     uint counter = 0;
 
     for(const auto &x : v0F) {
