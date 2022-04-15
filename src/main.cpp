@@ -69,7 +69,12 @@ int main(int argc, char *argv[]) {
         fairParityGame<string, string> fpg;
         fpg.constructFPG(a, transitions);
         parityGameSolver<fairParityGame<string, string>, string, string> pgsolver;
-        pgsolver.solveParityGame(fpg, a);
+        auto result = pgsolver.solveParityGame(fpg, a);
+        if(print) {
+            for(const auto &pairDPG : result) {
+                std::cout << "(" << pairDPG.first << ", " << pairDPG.second << ")\n";
+            }
+        }
     } else if(delayed) {
         delayedParityGame<string, string> dpg;
         dpg.constructDPG(a);

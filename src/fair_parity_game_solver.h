@@ -41,14 +41,14 @@ template<typename State> using Vertex1 = std::set<std::tuple<State, State, int, 
 template<class Game, typename State, typename Symbol>
 class parityGameSolver : public fairParityGame<State, Symbol> {
     public:
-        void solveParityGame(Game pg, Automaton<State, Symbol> &omega);
+        std::set<std::pair<State, State>> solveParityGame(Game pg, Automaton<State, Symbol> &omega);
         int update0(std::tuple<State, State, Symbol, int, int> v0, Game pg, uint n1, std::map<std::tuple<State, State, int, int>, std::set<std::tuple<State, State, Symbol, int, int>>> &EFA1, std::map<std::tuple<State, State, Symbol, int, int>, std::set<std::tuple<State, State, int, int>>> &EFA0);
         int update1(std::tuple<State, State, int, int> v1, Game pg, uint n1, std::map<std::tuple<State, State, Symbol, int, int>, std::set<std::tuple<State, State, int, int>>> &EFA0, std::map<std::tuple<State, State, int, int>, std::set<std::tuple<State, State, Symbol, int, int>>> &EFA1);
         uint n_1(Vertex0<State, Symbol> &v0F, Vertex1<State> &v1F);
 };
 
 template<typename Game, typename State, typename Symbol>
-void parityGameSolver<Game, State, Symbol>::solveParityGame(Game pg, Automaton<State, Symbol> &omega) {
+std::set<std::pair<State, State>> parityGameSolver<Game, State, Symbol>::solveParityGame(Game pg, Automaton<State, Symbol> &omega) {
     using namespace std;
 
     auto v0F = pg.getv0F();
@@ -60,9 +60,9 @@ void parityGameSolver<Game, State, Symbol>::solveParityGame(Game pg, Automaton<S
     uint const vertex1Length = v1F.size();
 
     const uint n1 = n_1(v0F, v1F);
-    if(!n1) {
-        std::cout << "There is no vertex with priority 1\n";
-    }
+//    if(!n1) {
+//        std::cout << "There is no vertex with priority 1\n";
+//    }
 
     std::vector<std::tuple<State, State, Symbol, int, int, int>> temp_v0;
     std::vector<std::tuple<State, State, int, int, int>> temp_v1;
@@ -103,10 +103,14 @@ void parityGameSolver<Game, State, Symbol>::solveParityGame(Game pg, Automaton<S
     for(const auto &x : v1F) { std::cout << "(" << std::get<0>(x) << ", " << std::get<1>(x) << ", " << std::get<2>(x) << ", " << std::get<3>(x) <<")\n"; }
     std::cout << "Solved the parity game!" << std::endl;
 
+    std::set<std::pair<State, State>> result;
+
     for(const auto &res : v1F) {
-        if(std::get<3>(res) < INF)
-            std::cout << "(" << std::get<0>(res) << ", " << std::get<1>(res) << ")\n";
+        if(std::get<3>(res) < INF) {
+            result.insert(make_pair(std::get<0>(res), std::get<1>(res)));
+        }
     }
+    return result;
 }
 
 template<typename Game, typename State, typename Symbol>

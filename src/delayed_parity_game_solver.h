@@ -63,9 +63,9 @@ std::set<std::pair<State, State>> delayedParityGameSolver<Game, State, Symbol>::
     uint const vertex1Length = v1D.size();
 
     const uint n1 = n_1(v0D, v1D);
-    if(!n1) {
-        std::cout << "There is no vertex with priority 1\n";
-    }
+//    if(!n1) {
+//        std::cout << "There is no vertex with priority 1\n";
+//    }
 
     std::vector<std::tuple<bool, State, State, Symbol, int, int, int>> temp_v0;
     std::vector<std::tuple<bool, State, State, int, int, int>> temp_v1;
