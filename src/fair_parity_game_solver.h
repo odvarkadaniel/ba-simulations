@@ -18,7 +18,6 @@ do {                   \
     }                       \
 } while(0)
 
-
 #define UPDATE_DFA0(x) \
 do {                 \
     for(auto &itr : EFA0) { \
@@ -98,10 +97,10 @@ std::set<std::pair<State, State>> parityGameSolver<Game, State, Symbol>::solvePa
         }
         temp_v1.clear();
     }
-    std::cout << "\n\n";
-    for(const auto &x : v0F) { std::cout << "(" << std::get<0>(x) << ", " << std::get<1>(x) << ", " << std::get<2>(x) << ", " << std::get<3>(x) << ", " << std::get<4>(x) <<")\n"; }
-    for(const auto &x : v1F) { std::cout << "(" << std::get<0>(x) << ", " << std::get<1>(x) << ", " << std::get<2>(x) << ", " << std::get<3>(x) <<")\n"; }
-    std::cout << "Solved the parity game!" << std::endl;
+    // std::cout << "\n\n";
+    // for(const auto &x : v0F) { std::cout << "(" << std::get<0>(x) << ", " << std::get<1>(x) << ", " << std::get<2>(x) << ", " << std::get<3>(x) << ", " << std::get<4>(x) <<")\n"; }
+    // for(const auto &x : v1F) { std::cout << "(" << std::get<0>(x) << ", " << std::get<1>(x) << ", " << std::get<2>(x) << ", " << std::get<3>(x) <<")\n"; }
+    // std::cout << "Solved the parity game!" << std::endl;
 
     std::set<std::pair<State, State>> result;
 
@@ -155,11 +154,10 @@ int parityGameSolver<Game, State, Symbol>::update1(std::tuple<State, State, int,
         for(auto &succ : successors) {
             rhos.push_back(get<4>(succ));
         }
-        auto maxRho = *min_element(begin(rhos), end(rhos));
+        auto maxRho = *max_element(begin(rhos), end(rhos));
 
-        for(auto &itr : EFA0) {
-            UPDATE_DFA0(maxRho);
-        }
+        UPDATE_DFA0(maxRho);
+
         return maxRho;
     } else { // p(v) is 1
         auto successors = pg.succ1(v1, EFA1);

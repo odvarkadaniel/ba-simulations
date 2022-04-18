@@ -1,8 +1,71 @@
 #include<stdlib.h>
 #include<stdarg.h>
 #include<iostream>
+#include <iostream>
+#include <fstream>
 
 #include"util.h"
+#include"automaton.h"
+
+std::string printAutAsDot(Automaton<std::string, std::string> &omega,
+                   std::set<std::pair<std::string, std::string>> &result) {
+    std::string aut = "digraph finite_state_machine {\n"
+	"fontname=\"Helvetica,Arial,sans-serif\"\n"
+	"node [fontname=\"Helvetica,Arial,sans-serif\"]\n"
+	"edge [fontname=\"Helvetica,Arial,sans-serif\"]\n"
+	"rankdir=LR;\n";
+
+    auto transitions = omega.getTransitions();
+    auto acceptingStates = omega.getAcceptingStates();
+    auto states = omega.getStates();
+
+    aut += "node [shape = doublecircle]; ";
+    for(const auto &acc : acceptingStates) {
+        aut += acc;
+        aut += " ";
+    }
+    aut += ";\n";
+
+    aut += "node [shape = circle];\n";
+
+    bool simulates = false;
+
+    for(const auto &tr : transitions) {
+        simulates = false;
+        for(const auto &sec : tr.second) {
+            for(const auto &res : result) {
+                if(res.first == tr.first.first && res.second == sec) { //red color to signal that (s0, s1) are in relation
+                    aut += tr.first.first;
+                    aut += " -> ";
+                    aut += sec;
+                    aut += " [label = \"";
+                    aut += tr.first.second;
+                    aut += "\", ";
+                    aut += "color = red];\n";
+                    simulates = true;
+                    break;
+                }
+            }
+            if(!simulates) {
+                aut += tr.first.first;
+                aut += " -> ";
+                aut += sec;
+                aut += " [label = \"";
+                aut += tr.first.second;
+                aut += "\"];\n";
+            }
+        }
+    }
+
+    aut += "}";
+
+    std::ofstream dotFile;
+    dotFile.open("result.dot", std::ios_base::out);
+    dotFile << aut;
+    dotFile.close();
+    
+    return aut;
+}
 
 /**
  * @brief Prints usage of the program

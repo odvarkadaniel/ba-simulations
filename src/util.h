@@ -7,7 +7,10 @@
 #include<algorithm>
 #include<set>
 
+#include"automaton.h"
+
 // function templates
+std::string printAutAsDot(Automaton<std::string, std::string> &omega, std::set<std::pair<std::string, std::string>> &result);
 void printHelp();
 void error_exit(const char *fmt, ...);
 std::vector<std::string> split(std::string original, std::string delimiter);

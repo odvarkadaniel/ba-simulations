@@ -180,7 +180,7 @@ void delayedParityGame<State, Symbol>::constructDPG(Automaton<State, Symbol> &om
     }
 
 #endif
-
+    std::cout << "Constructed the delayed parity game...\n\n";
     return;
 }
 

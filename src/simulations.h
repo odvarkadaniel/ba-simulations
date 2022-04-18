@@ -106,13 +106,24 @@ std::set<std::pair<State, State>> Simulation<State, Symbol>::directSimulationRel
         }
     }
 
-    cout << "\nComplement to direct simulation relation: ";
-    for ( const auto& token : omega )
-        cout << "(" << token.first << ", " << token.second << ")" << " ";
-    cout << endl << endl;
+    std::set<std::pair<State, State>> result;
+    for(const auto &s1 : states) {
+        for(const auto &s2 : states) {
+                result.insert(std::make_pair(s1, s2));
+        }
+    }
 
-    // TODO dotfile output
-    // Show which states simulate which 
+    // for(const auto &complement : omega) {
+    //     for(const auto &res : result) {
+    //         if(res.first == complement.first && res.second == complement.second) {
+    //             result.erase(std::make_pair(res.first, res.second));
+    //         }
+    //     }
+    // }
+
+//    for(const auto &r : result) {
+//        std::cout << r.first << r.second << "\n";
+//    }
 
     return omega;
 }

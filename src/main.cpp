@@ -6,13 +6,14 @@
 #include"fair_parity_game_solver.h"
 #include"delayed_parity_game.h"
 #include"delayed_parity_game_solver.h"
+#include"fair_solver_fast.h"
 
 int main(int argc, char *argv[]) {
     using namespace std;
 
     Automaton<string, string> a;
 
-    bool direct = false, fair = false, delayed = false, dot = false, print = false;
+    bool direct = false, fair = false, delayed = false, dot = false, print = false, fast = false;
 
     int c;
     while(1) {
@@ -22,7 +23,8 @@ int main(int argc, char *argv[]) {
             {"direct", no_argument, 0, 'd'},
             {"fair", no_argument, 0, 'f'},
             {"delayed", no_argument, 0, 'z'},
-            {"dot", no_argument, 0, 1}, // TODO
+            {"dot", no_argument, 0, 1},
+            {"fast", no_argument, 0, 2},
             {"help", no_argument, 0, 'h'},
             {"print", no_argument, 0, 'p'},
         };
@@ -34,6 +36,9 @@ int main(int argc, char *argv[]) {
         switch(c) {
             case 1:
                 dot = true;
+                break;
+            case 2:
+                fast = true;
                 break;
             case 's':
                 a = a.loadAutomaton(string(optarg));
@@ -63,16 +68,32 @@ int main(int argc, char *argv[]) {
         Simulation<string, string> s;
         if(dot)
             s.dotfile = true;
-        set<pair<string, string>> omega = s.directSimulationRelation(a);
-    } else if(fair) {
-        Delta<std::string, std::string> transitions = a.getTransitions();
-        fairParityGame<string, string> fpg;
-        fpg.constructFPG(a, transitions);
-        parityGameSolver<fairParityGame<string, string>, string, string> pgsolver;
-        auto result = pgsolver.solveParityGame(fpg, a);
+        auto result = s.directSimulationRelation(a);
         if(print) {
             for(const auto &pairDPG : result) {
                 std::cout << "(" << pairDPG.first << ", " << pairDPG.second << ")\n";
+            }
+        }
+        if(dot) {
+            auto dotString = printAutAsDot(a, result);
+        }
+    } else if(fair) {
+        Delta<std::string, std::string> transitions = a.getTransitions();
+        fairParityGame<std::string, std::string> fpg;
+        fpg.constructFPG(a, transitions);
+        if(fast) {
+            fastFairSolver<fairParityGame<std::string, std::string>, string, string> fastpgsolver;
+            fastpgsolver.fast(fpg, a);
+        } else {
+            parityGameSolver<fairParityGame<string, string>, string, string> pgsolver;
+            auto result = pgsolver.solveParityGame(fpg, a);
+            if(print) {
+                for(const auto &pairDPG : result) {
+                    std::cout << "(" << pairDPG.first << ", " << pairDPG.second << ")\n";
+                }
+            }
+            if(dot) {
+                auto dotString = printAutAsDot(a, result);
             }
         }
     } else if(delayed) {
@@ -84,6 +105,9 @@ int main(int argc, char *argv[]) {
             for(const auto &pairDPG : result) {
                 std::cout << "(" << pairDPG.first << ", " << pairDPG.second << ")\n";
             }
+        }
+        if(dot) {
+            auto dotString = printAutAsDot(a, result);
         }
     } else {
         cerr << "No simulation to compute selected\n\n";

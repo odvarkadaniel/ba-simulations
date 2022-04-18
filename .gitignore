@@ -3,3 +3,5 @@
 main
 test_all
 .idea
+*.png
+*.dot

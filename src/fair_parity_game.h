@@ -30,8 +30,6 @@ class fairParityGame : protected Automaton<State, Symbol> {
     private:
         std::set<std::tuple<State, State, Symbol, int, int>> m_v0F; // set with Player 0's states
         std::set<std::tuple<State, State, int, int>> m_v1F; // set with Player 1's states
-        // std::map<std::pair<State, Symbol>, std::set<State>> m_EFA0; // map with the transitions from P0 to P1
-        // std::map<std::pair<State, Symbol>, std::set<State>> m_EFA1; // map with the transitions from P1 to P0
         std::map<std::tuple<State, State, Symbol, int, int>, std::set<std::tuple<State, State, int, int>>> m_EFA0;
         std::map<std::tuple<State, State, int, int>, std::set<std::tuple<State, State, Symbol, int, int>>> m_EFA1;
 
@@ -39,31 +37,24 @@ class fairParityGame : protected Automaton<State, Symbol> {
 
 template<typename State, typename Symbol>
 std::set<std::tuple<State, State, int, int>> fairParityGame<State, Symbol>::succ0(std::tuple<State, State, Symbol, int, int> &v0, std::map<std::tuple<State, State, Symbol, int, int>, std::set<std::tuple<State, State, int, int>>> &EFA0) {
-    //std::cout << "(" << std::get<0>(v0) << ", " << std::get<1>(v0) << ", " << std::get<2>(v0) << ")\n";
-    //auto EFA0 = getEFA0();
-    
     std::set<std::tuple<State, State, int, int>> result;
-    for(auto &tran : EFA0) {
-        //std::cout << "(" << std::get<0>(tran.first) << ", " << std::get<1>(tran.first) << ", " << std::get<2>(tran.first) << ")\n";
-        if(std::get<0>(tran.first) == std::get<0>(v0) &&
-           std::get<1>(tran.first) == std::get<1>(v0) &&
-           std::get<2>(tran.first) == std::get<2>(v0) &&
-           std::get<3>(tran.first) == std::get<3>(v0)) {
-            for(auto& sec : tran.second) {
-                result.insert(std::make_tuple(std::get<0>(sec), std::get<1>(sec), std::get<2>(sec), std::get<3>(sec)));
-            }
-        }
-    }
+     for(auto &tran : EFA0) {
+         if(std::get<0>(tran.first) == std::get<0>(v0) &&
+            std::get<1>(tran.first) == std::get<1>(v0) &&
+            std::get<2>(tran.first) == std::get<2>(v0) &&
+            std::get<3>(tran.first) == std::get<3>(v0)) {
+             for(auto& sec : tran.second) {
+                 result.insert(std::make_tuple(std::get<0>(sec), std::get<1>(sec), std::get<2>(sec), std::get<3>(sec)));
+             }
+         }
+     }
     return result;
 }
 
 template<typename State, typename Symbol>
 std::set<std::tuple<State, State, Symbol, int, int>> fairParityGame<State, Symbol>::succ1(std::tuple<State, State, int, int> &v1, std::map<std::tuple<State, State, int, int>, std::set<std::tuple<State, State, Symbol, int, int>>> &EFA1) {
-    //std::cout << "(" << std::get<0>(v1) << ", " << std::get<1>(v1) << ", " << std::get<2>(v1) << ")\n";
-    //auto EFA1 = getEFA1();
     std::set<std::tuple<State, State, Symbol, int, int>> result;
     for(auto &tran : EFA1) {
-        //std::cout << "(" << std::get<0>(tran.first) << ", " << std::get<1>(tran.first) << ", " << std::get<2>(tran.first) << ")\n";
         if(std::get<0>(tran.first) == std::get<0>(v1) &&
            std::get<1>(tran.first) == std::get<1>(v1) &&
            std::get<2>(tran.first) == std::get<2>(v1)) {
@@ -118,13 +109,6 @@ int fairParityGame<State, Symbol>::getPrioritym_v1F(std::set<State> &acceptingSt
     using namespace std;
 
     for(const auto& accSt : acceptingState) {
-        // for (const auto &v0: m_v0F) {
-        //     if (get<1>(v0) == v1second && get<1>(v0) == accSt) {
-        //         return 0;
-        //     } else if(acceptingState.find(m_v1First) != acceptingState.end() && acceptingState.find(v1second) == acceptingState.end()) {
-        //         return 1;
-        //     }
-        // }
         if(v1second == accSt) {
             return 0;
         } else if(acceptingState.find(m_v1First) != acceptingState.end() && acceptingState.find(v1second) == acceptingState.end()) {
@@ -148,11 +132,6 @@ int fairParityGame<State, Symbol>::getPrioritym_v0F(std::set<State> &acceptingSt
     using namespace std;
 
     for(const auto& accSt : acceptingState) {
-        // for (const auto &v1f: m_v1F) {
-        //     if (get<1>(v1f) == v0 && get<0>(v1f) == v1 && get<1>(v1f) == accSt) {
-        //         return 0;
-        //     }
-        // }
         if(v0Second == accSt) return 0;
     }
 
@@ -244,7 +223,8 @@ void fairParityGame<State, Symbol>::constructFPG(Automaton<State, Symbol> &omega
 
     constructEFA(transitions);
 
-    #ifdef _DEBUG
+#ifdef _DEBUG
+
     cout << "m_v0F: \n";
     for (const auto& x : m_v0F) {
         cout << get<0>(x) << ' ' << get<1>(x) << ' ' << get<2>(x) << ' ' << get<3>(x) << ' ' << get<4>(x)<< '\n';
@@ -273,22 +253,9 @@ void fairParityGame<State, Symbol>::constructFPG(Automaton<State, Symbol> &omega
         }
     }
 
-    // cout << "m_EFA0: \n";
-    // for(const auto& elem : m_EFA0) {
-    //     for(const auto& e : elem.second) {
-    //         std::cout << elem.first.first << " " << elem.first.second << " " << e << endl;
-    //     }
-    // }
-
-    // cout << "m_EFA1: \n";
-    // for(const auto& elem : m_EFA1) {
-    //     for(const auto& e : elem.second) {
-    //         std::cout << elem.first.first << " " << elem.first.second << " " << e << endl;
-    //     }
-    // }
-    #endif
-
+#endif
+    std::cout << "Constructed the fair parity game...\n\n";
     return;
 }
 
-#endif // PARITY_GAME_H
+#endif
