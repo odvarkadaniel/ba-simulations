@@ -11,7 +11,7 @@
 template<class Game, typename State, typename Symbol>
 class fastFairSolver : public fairParityGame<State, Symbol> {
 public:
-    void fast(Game pg, Automaton<State, Symbol> &omega);
+    std::set<std::pair<State, State>> fast(Game pg, Automaton<State, Symbol> &omega);
 
     std::set<std::tuple<State, State, Symbol, int, int>> pred1(std::tuple<State, State, int, int> v1, Game pg);
     int incr1(std::tuple<State, State, int, int> v1, int B);
@@ -33,7 +33,7 @@ private:
 };
 
 template<class Game, typename State, typename Symbol>
-void fastFairSolver<Game, State, Symbol>::fast(Game pg, Automaton<State, Symbol> &omega) {
+std::set<std::pair<State, State>> fastFairSolver<Game, State, Symbol>::fast(Game pg, Automaton<State, Symbol> &omega) {
     auto v0F = pg.getv0F();
     auto v1F = pg.getv1F();
     auto EFA0 = pg.getEFA0();
@@ -42,10 +42,8 @@ void fastFairSolver<Game, State, Symbol>::fast(Game pg, Automaton<State, Symbol>
     n1Count = n1(v0F, v1F);
 
     for(const auto &v0 : v0F) {
-        // change one to number of successors
         auto succs = EFA0.find(v0);
         int number = succs->second.size();
-        int rho = 0;
         std::vector<int> insert;
         if(succs == EFA0.end()) {
             insert = {0, 0, INF}; // B(v), C(v), rho(v)
@@ -55,8 +53,8 @@ void fastFairSolver<Game, State, Symbol>::fast(Game pg, Automaton<State, Symbol>
         dataZero[v0] = insert;
         if(std::get<3>(v0) == 1) L0.insert(v0);
     }
+
     for(const auto &v1 : v1F) {
-        // change one to number of successors
         auto succs = EFA1.find(v1);
         int number = succs->second.size();
 
@@ -65,6 +63,7 @@ void fastFairSolver<Game, State, Symbol>::fast(Game pg, Automaton<State, Symbol>
             if(it == EFA0.end()) {
                 std::vector<int> insert = {0, number, INF};
                 dataOne[v1] = insert;
+                break;
             } else {
                 std::vector<int> insert = {0, number, 0};
                 dataOne[v1] = insert;
@@ -72,11 +71,37 @@ void fastFairSolver<Game, State, Symbol>::fast(Game pg, Automaton<State, Symbol>
         }
         if(std::get<2>(v1) == 1) L1.insert(v1);
     }
+    bool changed = true;
+    while(changed) {
+        changed = false;
+        for(const auto &v0 : dataZero) {
+            auto succ = pg.succ0(v0.first, EFA0);
+            if(succ.size() == 1) {
+                for(const auto &s : succ) {
+                    auto it = dataOne.find(s);
+                    if(it->second[2] == INF && v0.second[2] != INF) {
+                        dataZero[v0.first][2] = INF;
+                        changed = true;
+                    }
+                }
+            }
+        }
+        for(const auto &v1 : dataOne) {
+            auto succ = pg.succ1(v1.first, EFA1);
+            for(const auto &s : succ) {
+                auto it = dataZero.find(s);
+                if(it->second[2] == INF && v1.second[2] != INF) {
+                    dataOne[v1.first][2] = INF;
+                    changed = true;
+                }
+            }
+        }
+    }
 
     std::vector<std::tuple<State, State, Symbol, int, int>> temp_v0;
     std::vector<std::tuple<State, State, int, int>> temp_v1;
 
-    while(!L1.empty() || !L0.empty()) {
+    while(!L0.empty() || !L1.empty()) {
         for(auto &v1 : L1) {
             auto it = dataOne.find(v1);
             int t = it->second[2];
@@ -94,7 +119,7 @@ void fastFairSolver<Game, State, Symbol>::fast(Game pg, Automaton<State, Symbol>
             for(const auto &w : pred) {
                 auto wInfo = dataZero.find(w);
                 if(it->second[2] == wInfo->second[0]) {
-                    it->second[1]++;
+                    wInfo->second[1] += 1;
                 }
                 if(it->second[2] > wInfo->second[0]) {
                     L0.insert({wInfo->first});
@@ -141,11 +166,15 @@ void fastFairSolver<Game, State, Symbol>::fast(Game pg, Automaton<State, Symbol>
         temp_v0.clear();
     }
 
+    std::set<std::pair<State, State>> result;
+
     for(const auto &[key, value] : dataOne) {
         if(value[2] < INF) {
-            std::cout << "(" << std::get<0>(key) << ", " << std::get<1>(key) << ")\n";
+            result.insert(std::make_pair(std::get<0>(key), std::get<1>(key)));
         }
     }
+
+    return result;
 }
 
 template<class Game, typename State, typename Symbol>
@@ -166,7 +195,7 @@ fastFairSolver<Game, State, Symbol>::pred1(std::tuple<State, State, int, int> v1
 template<class Game, typename State, typename Symbol>
 int fastFairSolver<Game, State, Symbol>::incr1(std::tuple<State, State, int, int> v1, int B) {
     if(std::get<2>(v1) == 1) {
-        if((B + 1) > INF) {
+        if((B + 1) > n1Count) {
             return INF;
         }
         return (B + 1);
@@ -187,7 +216,15 @@ int fastFairSolver<Game, State, Symbol>::val1(Game pg, std::tuple<State, State, 
     }
 
     auto maxRho = *std::max_element(rhos.begin(), rhos.end());
-    return maxRho;
+
+    int prio = std::get<2>(v1);
+
+    if(prio == 0) {
+        if(maxRho == INF) return INF;
+        return 0;
+    } else {
+        return maxRho;
+    }
 }
 
 template<class Game, typename State, typename Symbol>
@@ -196,9 +233,10 @@ int fastFairSolver<Game, State, Symbol>::cnt1(Game pg, std::tuple<State, State, 
     auto succs = pg.succ1(v1, EFA1);
     int counter = 0;
 
+    auto valNumber = val1(pg, v1);
+
     for(const auto &s : succs) {
         auto it = dataZero.find(s);
-        auto valNumber = val1(pg, v1);
         int prio = std::get<2>(v1);
         int rho = it->second[2];
         if(prio == 1) {
@@ -207,7 +245,7 @@ int fastFairSolver<Game, State, Symbol>::cnt1(Game pg, std::tuple<State, State, 
             if(rho == valNumber) counter++;
         } else { // p(v) = 0
             if(rho == INF) {
-                if(rho == valNumber) { // TODO - actually wrong inf_0 = inf
+                if(rho == valNumber) {
                     counter++;
                 }
             } else {
@@ -235,7 +273,7 @@ uint fastFairSolver<Game, State, Symbol>::n1(std::set<std::tuple<State, State, S
 template<class Game, typename State, typename Symbol>
 int fastFairSolver<Game, State, Symbol>::incr0(std::tuple<State, State, Symbol, int, int> v0, int B) {
     if(std::get<3>(v0) == 1) {
-        if((B + 1) > INF) {
+        if((B + 1) > n1Count) {
             return INF;
         }
         return (B + 1);
@@ -270,7 +308,14 @@ int fastFairSolver<Game, State, Symbol>::val0(Game pg, std::tuple<State, State, 
     }
 
     auto minRho = *std::min_element(rhos.begin(), rhos.end());
-    return minRho;
+
+    int prio = std::get<3>(v0);
+    if(prio == 0) {
+        if(minRho == INF) return INF;
+        return 0;
+    } else {
+        return minRho;
+    }
 }
 
 template<class Game, typename State, typename Symbol>

@@ -24,8 +24,8 @@ class fairParityGame : protected Automaton<State, Symbol> {
         int getPrioritym_v1F(std::set<State> &acceptingState, State m_v1F, State v1s);
         void constructEFA(std::map<std::pair<State, Symbol>, std::set<State>>& transitions);
 
-        std::set<std::tuple<State, State, int, int>> succ0(std::tuple<State, State, Symbol, int, int> &v0, std::map<std::tuple<State, State, Symbol, int, int>, std::set<std::tuple<State, State, int, int>>> &EFA0);
-        std::set<std::tuple<State, State, Symbol, int, int>> succ1(std::tuple<State, State, int, int> &v1, std::map<std::tuple<State, State, int, int>, std::set<std::tuple<State, State, Symbol, int, int>>> &EFA1);
+        std::set<std::tuple<State, State, int, int>> succ0(std::tuple<State, State, Symbol, int, int> v0, std::map<std::tuple<State, State, Symbol, int, int>, std::set<std::tuple<State, State, int, int>>> &EFA0);
+        std::set<std::tuple<State, State, Symbol, int, int>> succ1(std::tuple<State, State, int, int> v1, std::map<std::tuple<State, State, int, int>, std::set<std::tuple<State, State, Symbol, int, int>>> &EFA1);
 
     private:
         std::set<std::tuple<State, State, Symbol, int, int>> m_v0F; // set with Player 0's states
@@ -36,7 +36,7 @@ class fairParityGame : protected Automaton<State, Symbol> {
 };
 
 template<typename State, typename Symbol>
-std::set<std::tuple<State, State, int, int>> fairParityGame<State, Symbol>::succ0(std::tuple<State, State, Symbol, int, int> &v0, std::map<std::tuple<State, State, Symbol, int, int>, std::set<std::tuple<State, State, int, int>>> &EFA0) {
+std::set<std::tuple<State, State, int, int>> fairParityGame<State, Symbol>::succ0(std::tuple<State, State, Symbol, int, int> v0, std::map<std::tuple<State, State, Symbol, int, int>, std::set<std::tuple<State, State, int, int>>> &EFA0) {
     std::set<std::tuple<State, State, int, int>> result;
      for(auto &tran : EFA0) {
          if(std::get<0>(tran.first) == std::get<0>(v0) &&
@@ -52,7 +52,7 @@ std::set<std::tuple<State, State, int, int>> fairParityGame<State, Symbol>::succ
 }
 
 template<typename State, typename Symbol>
-std::set<std::tuple<State, State, Symbol, int, int>> fairParityGame<State, Symbol>::succ1(std::tuple<State, State, int, int> &v1, std::map<std::tuple<State, State, int, int>, std::set<std::tuple<State, State, Symbol, int, int>>> &EFA1) {
+std::set<std::tuple<State, State, Symbol, int, int>> fairParityGame<State, Symbol>::succ1(std::tuple<State, State, int, int> v1, std::map<std::tuple<State, State, int, int>, std::set<std::tuple<State, State, Symbol, int, int>>> &EFA1) {
     std::set<std::tuple<State, State, Symbol, int, int>> result;
     for(auto &tran : EFA1) {
         if(std::get<0>(tran.first) == std::get<0>(v1) &&
@@ -225,33 +225,33 @@ void fairParityGame<State, Symbol>::constructFPG(Automaton<State, Symbol> &omega
 
 #ifdef _DEBUG
 
-    cout << "m_v0F: \n";
-    for (const auto& x : m_v0F) {
-        cout << get<0>(x) << ' ' << get<1>(x) << ' ' << get<2>(x) << ' ' << get<3>(x) << ' ' << get<4>(x)<< '\n';
-    }
+   cout << "m_v0F: \n";
+   for (const auto& x : m_v0F) {
+       cout << get<0>(x) << ' ' << get<1>(x) << ' ' << get<2>(x) << ' ' << get<3>(x) << ' ' << get<4>(x)<< '\n';
+   }
 
-    cout << endl;
+   cout << endl;
 
-    cout << "m_v1F: \n";
-    for(const auto &x : m_v1F) {
-        cout << get<0>(x) << ' ' << get<1>(x) << ' ' << get<2>(x) << ' ' << get<3>(x) << '\n';
-    }
+   cout << "m_v1F: \n";
+   for(const auto &x : m_v1F) {
+       cout << get<0>(x) << ' ' << get<1>(x) << ' ' << get<2>(x) << ' ' << get<3>(x) << '\n';
+   }
 
-    cout << "EFA0" << "\n";
-    for(const auto &elem : m_EFA0) {
-        for(const auto & e : elem.second) {
-            cout << "(" << get<0>(elem.first) << ", " << get<1>(elem.first) << ", " << get<2>(elem.first) << ", " << get<3>(elem.first) << ", " << get<4>(elem.first) << ") ---> "; 
-            cout << "(" << get<0>(e) << ", " << get<1>(e) << ", " << get<2>(e) << ", " << get<3>(e) << ")\n";
-        }
-    }
+   cout << "EFA0" << "\n";
+   for(const auto &elem : m_EFA0) {
+       for(const auto & e : elem.second) {
+           cout << "(" << get<0>(elem.first) << ", " << get<1>(elem.first) << ", " << get<2>(elem.first) << ", " << get<3>(elem.first) << ", " << get<4>(elem.first) << ") ---> ";
+           cout << "(" << get<0>(e) << ", " << get<1>(e) << ", " << get<2>(e) << ", " << get<3>(e) << ")\n";
+       }
+   }
 
-    cout << "EFA1" << "\n";
-    for(const auto &elem : m_EFA1) {
-        for(const auto & e : elem.second) {
-            cout << "(" << get<0>(elem.first) << ", " << get<1>(elem.first) << ", " << get<2>(elem.first) << ", " << get<3>(elem.first) << ") ---> "; 
-            cout << "(" << get<0>(e) << ", " << get<1>(e) << ", " << get<2>(e) << ", " << get<3>(e) << ", " << get<4>(e) << ")\n";
-        }
-    }
+   cout << "EFA1" << "\n";
+   for(const auto &elem : m_EFA1) {
+       for(const auto & e : elem.second) {
+           cout << "(" << get<0>(elem.first) << ", " << get<1>(elem.first) << ", " << get<2>(elem.first) << ", " << get<3>(elem.first) << ") ---> ";
+           cout << "(" << get<0>(e) << ", " << get<1>(e) << ", " << get<2>(e) << ", " << get<3>(e) << ", " << get<4>(e) << ")\n";
+       }
+   }
 
 #endif
     std::cout << "Constructed the fair parity game...\n\n";

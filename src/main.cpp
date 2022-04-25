@@ -83,7 +83,16 @@ int main(int argc, char *argv[]) {
         fpg.constructFPG(a, transitions);
         if(fast) {
             fastFairSolver<fairParityGame<std::string, std::string>, string, string> fastpgsolver;
-            fastpgsolver.fast(fpg, a);
+            auto result = fastpgsolver.fast(fpg, a);
+            if(print) {
+                for(const auto &pairDPG : result) {
+                    std::cout << "(" << pairDPG.first << ", " << pairDPG.second << ")\n";
+                }
+                std::cout << "number of states simulating: " << result.size() << "\n";
+                if(dot) {
+                    auto dotString = printAutAsDot(a, result);
+                }
+            }
         } else {
             parityGameSolver<fairParityGame<string, string>, string, string> pgsolver;
             auto result = pgsolver.solveParityGame(fpg, a);
