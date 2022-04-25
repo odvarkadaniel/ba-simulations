@@ -113,19 +113,16 @@ std::set<std::pair<State, State>> Simulation<State, Symbol>::directSimulationRel
         }
     }
 
-    // for(const auto &complement : omega) {
-    //     for(const auto &res : result) {
-    //         if(res.first == complement.first && res.second == complement.second) {
-    //             result.erase(std::make_pair(res.first, res.second));
-    //         }
-    //     }
-    // }
+    for(const auto &complement : omega) {
+        for(const auto &res : result) {
+            if(res.first == complement.first && res.second == complement.second) {
+                result.erase(std::make_pair(res.first, res.second));
+                break;
+            }
+        }
+    }
 
-//    for(const auto &r : result) {
-//        std::cout << r.first << r.second << "\n";
-//    }
-
-    return omega;
+    return result;
 }
 
 #endif
