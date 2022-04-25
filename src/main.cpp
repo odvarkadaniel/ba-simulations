@@ -7,6 +7,7 @@
 #include"delayed_parity_game.h"
 #include"delayed_parity_game_solver.h"
 #include"fair_solver_fast.h"
+#include"delayed_solver_fast.h"
 
 int main(int argc, char *argv[]) {
     using namespace std;
@@ -108,15 +109,28 @@ int main(int argc, char *argv[]) {
     } else if(delayed) {
         delayedParityGame<string, string> dpg;
         dpg.constructDPG(a);
-        delayedParityGameSolver<delayedParityGame<string, string>, string, string> pgsolver;
-        auto result = pgsolver.solveParityGame(dpg, a);
-        if(print) {
-            for(const auto &pairDPG : result) {
-                std::cout << "(" << pairDPG.first << ", " << pairDPG.second << ")\n";
+        if(fast) {
+            fastDelayedSolver<delayedParityGame<string, string>, string, string> pgsolver;
+            auto result = pgsolver.fast(dpg, a);
+            if(print) {
+                for(const auto &pairDPG : result) {
+                    std::cout << "(" << pairDPG.first << ", " << pairDPG.second << ")\n";
+                }
             }
-        }
-        if(dot) {
-            auto dotString = printAutAsDot(a, result);
+            if(dot) {
+                auto dotString = printAutAsDot(a, result);
+            }
+        } else {
+            delayedParityGameSolver<delayedParityGame<string, string>, string, string> pgsolver;
+            auto result = pgsolver.solveParityGame(dpg, a);
+            if(print) {
+                for(const auto &pairDPG : result) {
+                    std::cout << "(" << pairDPG.first << ", " << pairDPG.second << ")\n";
+                }
+            }
+            if(dot) {
+                auto dotString = printAutAsDot(a, result);
+            }
         }
     } else {
         cerr << "No simulation to compute selected\n\n";

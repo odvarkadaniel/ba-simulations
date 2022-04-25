@@ -225,33 +225,33 @@ void fairParityGame<State, Symbol>::constructFPG(Automaton<State, Symbol> &omega
 
 #ifdef _DEBUG
 
-   cout << "m_v0F: \n";
-   for (const auto& x : m_v0F) {
-       cout << get<0>(x) << ' ' << get<1>(x) << ' ' << get<2>(x) << ' ' << get<3>(x) << ' ' << get<4>(x)<< '\n';
-   }
-
-   cout << endl;
-
-   cout << "m_v1F: \n";
-   for(const auto &x : m_v1F) {
-       cout << get<0>(x) << ' ' << get<1>(x) << ' ' << get<2>(x) << ' ' << get<3>(x) << '\n';
-   }
-
-   cout << "EFA0" << "\n";
-   for(const auto &elem : m_EFA0) {
-       for(const auto & e : elem.second) {
-           cout << "(" << get<0>(elem.first) << ", " << get<1>(elem.first) << ", " << get<2>(elem.first) << ", " << get<3>(elem.first) << ", " << get<4>(elem.first) << ") ---> ";
-           cout << "(" << get<0>(e) << ", " << get<1>(e) << ", " << get<2>(e) << ", " << get<3>(e) << ")\n";
-       }
-   }
-
-   cout << "EFA1" << "\n";
-   for(const auto &elem : m_EFA1) {
-       for(const auto & e : elem.second) {
-           cout << "(" << get<0>(elem.first) << ", " << get<1>(elem.first) << ", " << get<2>(elem.first) << ", " << get<3>(elem.first) << ") ---> ";
-           cout << "(" << get<0>(e) << ", " << get<1>(e) << ", " << get<2>(e) << ", " << get<3>(e) << ", " << get<4>(e) << ")\n";
-       }
-   }
+//   cout << "m_v0F: \n";
+//   for (const auto& x : m_v0F) {
+//       cout << get<0>(x) << ' ' << get<1>(x) << ' ' << get<2>(x) << ' ' << get<3>(x) << ' ' << get<4>(x)<< '\n';
+//   }
+//
+//   cout << endl;
+//
+//   cout << "m_v1F: \n";
+//   for(const auto &x : m_v1F) {
+//       cout << get<0>(x) << ' ' << get<1>(x) << ' ' << get<2>(x) << ' ' << get<3>(x) << '\n';
+//   }
+//
+//   cout << "EFA0" << "\n";
+//   for(const auto &elem : m_EFA0) {
+//       for(const auto & e : elem.second) {
+//           cout << "(" << get<0>(elem.first) << ", " << get<1>(elem.first) << ", " << get<2>(elem.first) << ", " << get<3>(elem.first) << ", " << get<4>(elem.first) << ") ---> ";
+//           cout << "(" << get<0>(e) << ", " << get<1>(e) << ", " << get<2>(e) << ", " << get<3>(e) << ")\n";
+//       }
+//   }
+//
+//   cout << "EFA1" << "\n";
+//   for(const auto &elem : m_EFA1) {
+//       for(const auto & e : elem.second) {
+//           cout << "(" << get<0>(elem.first) << ", " << get<1>(elem.first) << ", " << get<2>(elem.first) << ", " << get<3>(elem.first) << ") ---> ";
+//           cout << "(" << get<0>(e) << ", " << get<1>(e) << ", " << get<2>(e) << ", " << get<3>(e) << ", " << get<4>(e) << ")\n";
+//       }
+//   }
 
 #endif
     std::cout << "Constructed the fair parity game...\n\n";

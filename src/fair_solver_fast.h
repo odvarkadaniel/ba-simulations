@@ -102,6 +102,7 @@ std::set<std::pair<State, State>> fastFairSolver<Game, State, Symbol>::fast(Game
     std::vector<std::tuple<State, State, int, int>> temp_v1;
 
     while(!L0.empty() || !L1.empty()) {
+        std::cout << "iteration\n";
         for(auto &v1 : L1) {
             auto it = dataOne.find(v1);
             int t = it->second[2];

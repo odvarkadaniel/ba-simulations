@@ -176,50 +176,50 @@ Automaton<std::string, std::string> Automaton<std::string, std::string>::loadAut
 
     #ifdef _DEBUG
 
-    cout << "initial states: ";
-    for(const auto &i: omega.initialStates) {
-        cout << i << ", ";
-    }
-    
-    cout << endl;
-
-    cout << "states: ";
-    for(const auto &i: omega.states) {
-        cout << i << ", ";
-    }
-
-    cout << endl;
-
-    cout << "accepting states: ";
-    for(const auto &i: omega.acceptingStates) {
-        cout << i << ", ";
-    }
-
-    cout << endl;
-
-    cout << "alphabet: ";
-    for(const auto &i: omega.alphabet) {
-        cout << i << ", ";
-    }
-
-    cout << endl;
-
-    cout << "transitions: \n";
-    for(const auto& elem : omega.transitions) {
-        for(const auto& e : elem.second) {
-            std::cout << elem.first.first << " " << elem.first.second << " " << e << endl;
-        }
-    }
-
-    cout << endl;
-
-    cout << "reversed transitions: \n";
-    for(const auto& elem : omega.reversedTransitions) {
-        for(const auto& e : elem.second)
-            std::cout << elem.first.first << " " << elem.first.second << " " << e << endl;
-    }
-
-    cout << endl;
+//    cout << "initial states: ";
+//    for(const auto &i: omega.initialStates) {
+//        cout << i << ", ";
+//    }
+//
+//    cout << endl;
+//
+//    cout << "states: ";
+//    for(const auto &i: omega.states) {
+//        cout << i << ", ";
+//    }
+//
+//    cout << endl;
+//
+//    cout << "accepting states: ";
+//    for(const auto &i: omega.acceptingStates) {
+//        cout << i << ", ";
+//    }
+//
+//    cout << endl;
+//
+//    cout << "alphabet: ";
+//    for(const auto &i: omega.alphabet) {
+//        cout << i << ", ";
+//    }
+//
+//    cout << endl;
+//
+//    cout << "transitions: \n";
+//    for(const auto& elem : omega.transitions) {
+//        for(const auto& e : elem.second) {
+//            std::cout << elem.first.first << " " << elem.first.second << " " << e << endl;
+//        }
+//    }
+//
+//    cout << endl;
+//
+//    cout << "reversed transitions: \n";
+//    for(const auto& elem : omega.reversedTransitions) {
+//        for(const auto& e : elem.second)
+//            std::cout << elem.first.first << " " << elem.first.second << " " << e << endl;
+//    }
+//
+//    cout << endl;
 
     #endif
     

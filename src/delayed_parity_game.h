@@ -21,12 +21,12 @@ public:
     void constructDPG(Automaton <State, Symbol> &omega);
     void construct_EDA(Automaton <State, Symbol> &omega);
 
-    std::set<std::tuple<bool, State, State, int, int>> succ0(std::tuple<bool, State, State, Symbol, int, int> &v0, std::map<std::tuple<bool, State, State, Symbol, int, int>, std::set<std::tuple<bool, State, State, int, int>>> &EDA0);
-    std::set<std::tuple<bool, State, State, Symbol, int, int>> succ1(std::tuple<bool, State, State, int, int> &v1, std::map<std::tuple<bool, State, State, int, int>, std::set<std::tuple<bool, State, State, Symbol, int, int>>> &EDA1);
+    std::set<std::tuple<bool, State, State, int, int>> succ0(std::tuple<bool, State, State, Symbol, int, int> v0, std::map<std::tuple<bool, State, State, Symbol, int, int>, std::set<std::tuple<bool, State, State, int, int>>> &EDA0);
+    std::set<std::tuple<bool, State, State, Symbol, int, int>> succ1(std::tuple<bool, State, State, int, int> v1, std::map<std::tuple<bool, State, State, int, int>, std::set<std::tuple<bool, State, State, Symbol, int, int>>> &EDA1);
 };
 
 template<typename State, typename Symbol>
-std::set<std::tuple<bool, State, State, int, int>> delayedParityGame<State, Symbol>::succ0(std::tuple<bool, State, State, Symbol, int, int> &v0, std::map<std::tuple<bool, State, State, Symbol, int, int>, std::set<std::tuple<bool, State, State, int, int>>> &EDA0) {
+std::set<std::tuple<bool, State, State, int, int>> delayedParityGame<State, Symbol>::succ0(std::tuple<bool, State, State, Symbol, int, int> v0, std::map<std::tuple<bool, State, State, Symbol, int, int>, std::set<std::tuple<bool, State, State, int, int>>> &EDA0) {
     //std::cout << "(" << std::get<0>(v0) << ", " << std::get<1>(v0) << ", " << std::get<2>(v0) << ")\n";
     //auto EFA0 = getEFA0();
 
@@ -47,7 +47,7 @@ std::set<std::tuple<bool, State, State, int, int>> delayedParityGame<State, Symb
 }
 
 template<typename State, typename Symbol>
-std::set<std::tuple<bool, State, State, Symbol, int, int>> delayedParityGame<State, Symbol>::succ1(std::tuple<bool, State, State, int, int> &v1, std::map<std::tuple<bool, State, State, int, int>, std::set<std::tuple<bool, State, State, Symbol, int, int>>> &EDA1) {
+std::set<std::tuple<bool, State, State, Symbol, int, int>> delayedParityGame<State, Symbol>::succ1(std::tuple<bool, State, State, int, int> v1, std::map<std::tuple<bool, State, State, int, int>, std::set<std::tuple<bool, State, State, Symbol, int, int>>> &EDA1) {
     //std::cout << "(" << std::get<0>(v1) << ", " << std::get<1>(v1) << ", " << std::get<2>(v1) << ")\n";
     //auto EFA1 = getEFA1();
     std::set<std::tuple<bool, State, State, Symbol, int, int>> result;
@@ -151,33 +151,33 @@ void delayedParityGame<State, Symbol>::constructDPG(Automaton<State, Symbol> &om
 
 #ifdef _DEBUG
 
-    std::cout << "Delayed V1: \n";
-    for(const auto &vertex : m_v1D) {
-        std::cout << "(" << get<0>(vertex) << ", " << get<1>(vertex) << ", " << get<2>(vertex) << ", " << get<3>(vertex) << ", " << get<4>(vertex) << ")" << std::endl;
-    }
-
-    std::cout << "Delayed V0: \n";
-    for(const auto &vertex : m_v0D) {
-        std::cout << "(" << get<0>(vertex) << ", " << get<1>(vertex) << ", " << get<2>(vertex) << ", " << get<3>(vertex) << ", " << get<4>(vertex) << ", " << get<5>(vertex) << ")" << std::endl;
-    }
-
-    std::cout << "Delayed transitions E0: \n";
-    for(const auto &vertex : m_EDA0) {
-        for(const auto &sec : vertex.second) {
-            std::cout << "(" << get<0>(vertex.first) << ", " << get<1>(vertex.first) << ", " << get<2>(vertex.first)
-                      << ", " << get<3>(vertex.first) << ") ---> (" << get<0>(sec) << ", " << get<1>(sec) << ", " <<
-                      get<2>(sec) << ")" << std::endl;
-        }
-    }
-
-    std::cout << "Delayed transitions E1: \n";
-    for(const auto &vertex : m_EDA1) {
-        for(const auto &sec : vertex.second) {
-            std::cout << "(" << get<0>(vertex.first) << ", " << get<1>(vertex.first) << ", " << get<2>(vertex.first)
-                      << ") ---> (" << get<0>(sec) << ", " << get<1>(sec) << ", " <<
-                      get<2>(sec) << ", " << get<3>(sec) << ")" << std::endl;
-        }
-    }
+//    std::cout << "Delayed V1: \n";
+//    for(const auto &vertex : m_v1D) {
+//        std::cout << "(" << get<0>(vertex) << ", " << get<1>(vertex) << ", " << get<2>(vertex) << ", " << get<3>(vertex) << ", " << get<4>(vertex) << ")" << std::endl;
+//    }
+//
+//    std::cout << "Delayed V0: \n";
+//    for(const auto &vertex : m_v0D) {
+//        std::cout << "(" << get<0>(vertex) << ", " << get<1>(vertex) << ", " << get<2>(vertex) << ", " << get<3>(vertex) << ", " << get<4>(vertex) << ", " << get<5>(vertex) << ")" << std::endl;
+//    }
+//
+//    std::cout << "Delayed transitions E0: \n";
+//    for(const auto &vertex : m_EDA0) {
+//        for(const auto &sec : vertex.second) {
+//            std::cout << "(" << get<0>(vertex.first) << ", " << get<1>(vertex.first) << ", " << get<2>(vertex.first)
+//                      << ", " << get<3>(vertex.first) << ") ---> (" << get<0>(sec) << ", " << get<1>(sec) << ", " <<
+//                      get<2>(sec) << ")" << std::endl;
+//        }
+//    }
+//
+//    std::cout << "Delayed transitions E1: \n";
+//    for(const auto &vertex : m_EDA1) {
+//        for(const auto &sec : vertex.second) {
+//            std::cout << "(" << get<0>(vertex.first) << ", " << get<1>(vertex.first) << ", " << get<2>(vertex.first)
+//                      << ") ---> (" << get<0>(sec) << ", " << get<1>(sec) << ", " <<
+//                      get<2>(sec) << ", " << get<3>(sec) << ")" << std::endl;
+//        }
+//    }
 
 #endif
     std::cout << "Constructed the delayed parity game...\n\n";
