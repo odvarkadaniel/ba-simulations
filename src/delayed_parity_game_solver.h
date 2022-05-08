@@ -113,9 +113,9 @@ std::set<std::pair<State, State>> delayedParityGameSolver<Game, State, Symbol>::
         if(get<4>(v1) < INF) {
             if (get<0>(v1) == 1 && omega.isAcceptingState(get<1>(v1)) && !omega.isAcceptingState(get<2>(v1))) {
                 result.insert(std::make_pair(std::get<1>(v1), std::get<2>(v1)));
-
-            } else if(get<0>(v1) == 0 && !omega.isAcceptingState(get<1>(v1)) && omega.isAcceptingState(get<2>(v1))) {
-                result.insert(std::make_pair(std::get<1>(v1), std::get<2>(v1)));
+            } else {
+                if(get<0>(v1) == 0)
+                    result.insert(std::make_pair(std::get<1>(v1), std::get<2>(v1)));
             }
             if(get<1>(v1) == get<2>(v1)) {
                 result.insert(std::make_pair(std::get<1>(v1), std::get<2>(v1)));

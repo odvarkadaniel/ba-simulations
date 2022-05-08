@@ -111,17 +111,6 @@ std::set<std::pair<State, State>> fastDelayedSolver<Game, State, Symbol>::fast(G
             it->second[2] = incr1(v1, it->second[0]);
             auto pred = pred1(v1, pg);
 
-//             for(const auto &p : pred) {
-//                 if(L0.find(p) != L0.end()) {
-//                     temp_pred1.push_back(p);
-//                 }
-//             }
-//
-//             for(const auto &pred1 : temp_pred1) {
-//                 pred.erase(pred1);
-//             }
-//             temp_pred1.clear();
-
             for(const auto &w : pred) {
                 auto wInfo = dataZero.find(w);
                 if(std::get<4>(wInfo->first) != 0 && it->second[2] > wInfo->second[0]) {
@@ -135,15 +124,8 @@ std::set<std::pair<State, State>> fastDelayedSolver<Game, State, Symbol>::fast(G
                         }
                     }
                 }
-//                if(it->second[2] == wInfo->second[0]) {
-//                    wInfo->second[1] += 1;
-//                }
-//                if(it->second[2] > wInfo->second[0]) {
-//                    L0.insert({wInfo->first});
-//                }
             }
             temp_v1.push_back(v1);
-            //L1.erase(v1);
         }
 
         for(const auto &insert : temp_v1) {
@@ -159,29 +141,12 @@ std::set<std::pair<State, State>> fastDelayedSolver<Game, State, Symbol>::fast(G
             it->second[2] = incr0(v0, it->second[0]);
             auto pred = pred0(v0, pg);
 
-//             for(const auto &p : pred) {
-//                 if(L1.find(p) != L1.end()) {
-//                     temp_pred0.push_back(p);
-//                 }
-//             }
-//
-//             for(const auto &pred0 : temp_pred0) {
-//                 pred.erase(pred0);
-//             }
-//             temp_pred0.clear();
-
             for(const auto &w : pred) {
                 auto wInfo = dataOne.find(w);
                 if(std::get<3>(wInfo->first) != 0 && it->second[2] > wInfo->second[0]) {
                     if(wInfo->second[2] != INF)
                         L1.insert({wInfo->first});
                 }
-//                if(t == wInfo->second[0] && wInfo->second[1] > 1) {
-//                    wInfo->second[1] -= 1;
-//                }
-//                if(t == wInfo->second[0] && wInfo->second[1] == 1) {
-//                    L1.insert({wInfo->first});
-//                }
             }
             temp_v0.push_back(v0);
         }
@@ -199,8 +164,9 @@ std::set<std::pair<State, State>> fastDelayedSolver<Game, State, Symbol>::fast(G
         if(value[2] < INF) {
             if (get<0>(key) == 1 && omega.isAcceptingState(get<1>(key)) && !omega.isAcceptingState(get<2>(key))) {
                 result.insert(std::make_pair(std::get<1>(key), std::get<2>(key)));
-            } else if(get<0>(key) == 0 && !omega.isAcceptingState(get<1>(key)) && omega.isAcceptingState(get<2>(key))) {
-                result.insert(std::make_pair(std::get<1>(key), std::get<2>(key)));
+            } else {
+                if(get<0>(key) == 0)
+                    result.insert(std::make_pair(std::get<1>(key), std::get<2>(key)));
             }
             if(get<1>(key) == get<2>(key)) {
                 result.insert(std::make_pair(std::get<1>(key), std::get<2>(key)));

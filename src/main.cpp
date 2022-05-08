@@ -55,13 +55,13 @@ int main(int argc, char *argv[]) {
                 break;
             case 'h':
                 printHelp();
-                break;
+                return 0;
             case 'p':
                 print = true;
                 break;
             case '?':
                 printHelp();
-                break;
+                return 1;
         }
     }
 
@@ -78,6 +78,7 @@ int main(int argc, char *argv[]) {
         if(dot) {
             auto dotString = printAutAsDot(a, result);
         }
+        std::cout << result.size() << "\n";
     } else if(fair) {
         Delta<std::string, std::string> transitions = a.getTransitions();
         fairParityGame<std::string, std::string> fpg;
@@ -94,6 +95,7 @@ int main(int argc, char *argv[]) {
                     auto dotString = printAutAsDot(a, result);
                 }
             }
+            std::cout << result.size() << "\n";
         } else {
             parityGameSolver<fairParityGame<string, string>, string, string> pgsolver;
             auto result = pgsolver.solveParityGame(fpg, a);
@@ -105,6 +107,7 @@ int main(int argc, char *argv[]) {
             if(dot) {
                 auto dotString = printAutAsDot(a, result);
             }
+            std::cout << result.size() << "\n";
         }
     } else if(delayed) {
         delayedParityGame<string, string> dpg;
@@ -120,6 +123,7 @@ int main(int argc, char *argv[]) {
             if(dot) {
                 auto dotString = printAutAsDot(a, result);
             }
+            std::cout << result.size() << "\n";
         } else {
             delayedParityGameSolver<delayedParityGame<string, string>, string, string> pgsolver;
             auto result = pgsolver.solveParityGame(dpg, a);
@@ -131,6 +135,7 @@ int main(int argc, char *argv[]) {
             if(dot) {
                 auto dotString = printAutAsDot(a, result);
             }
+            std::cout << result.size() << "\n";
         }
     } else {
         cerr << "No simulation to compute selected\n\n";

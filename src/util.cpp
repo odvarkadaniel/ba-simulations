@@ -75,13 +75,16 @@ void printHelp() {
     using namespace std;
 
     cout << "Usage example:\n";
-    cout << "./main --file=filename { fair | direct | delayed } [dotfile.out]\n";
-    cout << "./main --file=omega.ba --fair\n\n";
+    cout << "  ./main --file=omega.ba --fair --fast --print\n\n";
+    cout << "Usage:\n";
+    cout << "  ./main --file=filename.ba { --fair | --direct | --delayed } { --fast } [dotfile.out]\n";
     cout << "Commands:\n";
-    cout << "{ file / s } \t Set an input file ( supported formats are .BA, ...)\n";
-    cout << "{ fair | direct | delayed } \t Set a simulation you want to compute\n"; 
-    cout << "[ dot ] \t Outputs the automaton in a DOT format into file named omega.out\n";
-    cout << "[ help / h ] \t Prints help\n";
+    cout << "  { file / s } \t Set an input file ( supported formats are .BA, ...)\n";
+    cout << "  { fair | direct | delayed } \t Set a simulation you want to compute\n";
+    cout << "  [ fast ] \t Set the fast algorithm for fair or delayed simulation\n";
+    cout << "  [ print ] \t Print the result relation into the terminal\n"; 
+    cout << "  [ dot ] \t Outputs the automaton in a DOT format into file named omega.out\n";
+    cout << "  [ help / h ] \t Prints help\n";
 }
 
 /**
