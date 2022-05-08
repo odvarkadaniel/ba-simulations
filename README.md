@@ -1,7 +1,7 @@
 # nba-simluations
 CLI that computes different simulation relations over nondeterministic Buchi automata.
 Currently we support fair, direct and delayed simulation. We use parity games to compute the fair and delayed simulation relation.
-There is a naive version of the direct simulation relation algorithm and two implementation of the Jurdzinski's lifting algorithm.
+There is a naive version of the direct simulation relation algorithm and two implementations of the Jurdzinski's lifting algorithm.
 
 ```
 Usage example:
