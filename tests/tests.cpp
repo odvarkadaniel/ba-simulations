@@ -15,18 +15,10 @@ TEST(DirectSimulationRelation, DirectSimulation) {
     std::set<std::pair<std::string, std::string>> actualOmega = s.directSimulationRelation(a);
     std::set<std::pair<std::string, std::string>> expectedOmega;
 
-    expectedOmega.insert({make_pair("1", "2")});
-    expectedOmega.insert({make_pair("1", "3")});
-    expectedOmega.insert({make_pair("1", "4")});
-    expectedOmega.insert({make_pair("2", "1")});
-    expectedOmega.insert({make_pair("2", "3")});
-    expectedOmega.insert({make_pair("2", "4")});
-    expectedOmega.insert({make_pair("3", "1")});
-    expectedOmega.insert({make_pair("3", "2")});
-    expectedOmega.insert({make_pair("3", "4")});
-    expectedOmega.insert({make_pair("4", "1")});
-    expectedOmega.insert({make_pair("4", "2")});
-    expectedOmega.insert({make_pair("4", "3")});
+    expectedOmega.insert({make_pair("1", "1")});
+    expectedOmega.insert({make_pair("2", "2")});
+    expectedOmega.insert({make_pair("3", "3")});
+    expectedOmega.insert({make_pair("4", "4")});
 
     EXPECT_EQ(expectedOmega, actualOmega);
 }
