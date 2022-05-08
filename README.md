@@ -1,7 +1,9 @@
 # nba-simluations
 CLI that computes different simulation relations over nondeterministic Buchi automata.
 Currently we support fair, direct and delayed simulation. We use parity games to compute the fair and delayed simulation relation.
+There is a naive version of the direct simulation relation algorithm and two implementation of the Jurdzinski's lifting algorithm.
 
+```
 Usage example:
   ./main --file=omega.ba --fair --fast --print
 
@@ -14,3 +16,4 @@ Commands:
   [ print ] 	 Print the result relation into the terminal
   [ dot ] 	 Outputs the automaton in a DOT format into file named omega.out
   [ help / h ] 	 Prints help
+  ```
